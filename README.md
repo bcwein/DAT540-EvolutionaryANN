@@ -7,7 +7,7 @@ Project in DAT540 for exploring evolutionary ANNs in OpenAI's cartpole environme
 ## Anaconda Environment
 To organise the libraries utilised in our project. A anaconda environment is stored in the folder "Environment". 
 
-For a deeper explanation of managing environments. see the documentation [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-with-commands).
+For a deeper explanation of managing environments. see the documentation [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html).
 
 ### Setting up environment from file
 
