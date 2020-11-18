@@ -8,7 +8,7 @@ population_size = 50
 generations = 1
 mutation_rate = 20
 
-env = gym.make('CartPole-v0')
+env = gym.make('CartPole-v1')
 
 population = functions.initialise_population(population_size, env)
 fit = np.zeros(population_size)
