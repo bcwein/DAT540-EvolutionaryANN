@@ -3,3 +3,7 @@ channels:
   - defaults
 dependencies:
   - gym
+  - pylint
+  - pycodestyle
+  - pydocstyle
+  
