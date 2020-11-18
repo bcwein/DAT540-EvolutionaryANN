@@ -1,0 +1,7 @@
+{
+    "python.linting.pylintEnabled": true,
+    "python.linting.pycodestyleEnabled": true,
+    "python.linting.enabled": true,
+    "python.linting.pydocstyleEnabled": true,
+    "python.pythonPath": "c:\\Apps\\Anaconda3\\envs\\DAT540EANN\\python.exe"
+}
