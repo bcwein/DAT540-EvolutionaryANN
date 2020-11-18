@@ -17,16 +17,10 @@ Open anaconda command line and type
 
 Anaconda will then set up a environment with the packages specifiedin the .yml file
 
-### Exporting environment | Updating environment
+### Updating environment
 
-If you as a contributor have installed a new library, the code in this repoisotory is dependent on that library. To update the anaconda environment, type
+If you need to install another package, update the environment.yml file manually and use the command
 
-> conda env export > DAT540EANN.yml
-
-OR
-
-Update the environment.yml file manually and use the command
-
-> conda env update --prefix ./env --file environment.yml  --prune
+> conda env update --file DAT540EANN.yml  --prune
 
 The --prune option causes conda to remove any dependencies that are no longer required from the environment.
