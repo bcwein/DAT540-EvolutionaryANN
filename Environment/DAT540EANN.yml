@@ -1,4 +1,5 @@
 name: DAT540EANN
 channels:
   - defaults
-prefix: C:\Apps\Anaconda3\envs\DAT540EANN
+dependencies:
+  - gym
