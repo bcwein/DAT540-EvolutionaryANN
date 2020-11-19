@@ -1,6 +1,7 @@
 name: DAT540EANN
 channels:
   - defaults
+  - conda-forge
 dependencies:
   - gym
   - pylint
