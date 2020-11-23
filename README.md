@@ -7,6 +7,7 @@ Project in DAT540 for exploring evolutionary ANNs in OpenAI's cartpole environme
 * Ove Jørgensen - Data Science
 * Håvard Godal - Data Science
 * Johanna Kinstad - Data Science
+* Vegard Rongve
 
 ## Anaconda Environment
 To organise the libraries utilised in our project. A anaconda environment is stored in the folder "Environment". 
