@@ -36,20 +36,30 @@ def initialise_population(size, env):
         )
     return population
 
+
 def swapMutation(coefL_crossover, mutationRate):
-    
+    """[Mutate weights to avoid local minima].
+
+    Args:
+        coefL_crossover ([numpy array]): [description]
+        mutationRate ([float]): [description]
+
+    Returns:
+        [numpy array]: [the new weights]
+    """
     for swapped in range(len(coefL_crossover)):
 
         if(random.random() < mutationRate):
             swapWith = int(random.random() * len(coefL_crossover))
-        
+
             coef1 = coefL_crossover[swapped]
             coef2 = coefL_crossover[swapWith]
-            
+
             coefL_crossover[swapped] = coef2
             coefL_crossover[swapWith] = coef1
     return coefL_crossover
-    
+
+
 def breedArch(nn1, nn2):
     """[Breeds a child from 2 parents using crossover].
 
