@@ -37,27 +37,29 @@ def initialise_population(size, env):
     return population
 
 
-def swapMutation(coefL_crossover, mutationRate):
-    """[Mutate weights to avoid local minima].
+def swapMutation(parent1Coeff, parent2Coeff, mutationRate):
+    """[Mutate weights of parents to avoid local minima].
 
     Args:
-        coefL_crossover ([numpy array]): [description]
-        mutationRate ([float]): [description]
+        parent1Coeff ([numpy array]): [Weights of first parent]
+        parent2Coeff ([numpy array]): [Weights of second parent]
+        mutationRate ([float]): [Probability of mutation occuring]
 
     Returns:
-        [numpy array]: [the new weights]
+        parent1Coeff [numpy array]: [the new weights for each parent]
+        parent2Coeff [numpy array]: [the new weights for each parent]
     """
-    for swapped in range(len(coefL_crossover)):
+    layer1 = np.random.randint(0,  len(parent1Coeff))
+    row1 = np.random.randint(0,  len(parent1Coeff[0]))
+    layer2 = np.random.randint(0,  len(parent2Coeff))
+    row2 = np.random.randint(0,  len(parent2Coeff[0]))
 
-        if(random.random() < mutationRate):
-            swapWith = int(random.random() * len(coefL_crossover))
+    if(random.random() < mutationRate):
+        tmp = parent1Coeff[[layer1, row1]]
+        parent1Coeff[[layer1, row1]] = parent2Coeff[[layer2, row2]]
+        parent2Coeff[[layer2, row2]] = tmp
 
-            coef1 = coefL_crossover[swapped]
-            coef2 = coefL_crossover[swapWith]
-
-            coefL_crossover[swapped] = coef2
-            coefL_crossover[swapWith] = coef1
-    return coefL_crossover
+    return parent1Coeff, parent2Coeff
 
 
 def breedArch(nn1, nn2):
