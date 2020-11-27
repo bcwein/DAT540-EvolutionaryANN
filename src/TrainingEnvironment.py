@@ -4,6 +4,7 @@ import gym
 import numpy as np
 import functions
 import copy
+import random
 
 population_size = 50
 generations = 4  # 15
@@ -46,6 +47,8 @@ for i in range(generations):
         newCoef, newInter = functions.breedArch(parent1, parent2)
         population[j].coefs_ = newCoef
         population[j].intercepts_ = newInter
+        if(random.random() < mutation_rate):
+            population[j].coefs_ = functions.swapMutation(population[j].coefs_)
 
 print(fit)
 env.close()

@@ -37,29 +37,29 @@ def initialise_population(size, env):
     return population
 
 
-def swapMutation(parent1Coeff, parent2Coeff, mutationRate):
+def swapMutation(weights):
     """[Mutate weights of parents to avoid local minima].
 
+    Algorithm:
+        1. Select two random pair of rows and indexes.
+        2. Swap the weights of the two indexes.
+        3. (to be implemented) do the same for bias.
+
     Args:
-        parent1Coeff ([numpy array]): [Weights of first parent]
-        parent2Coeff ([numpy array]): [Weights of second parent]
-        mutationRate ([float]): [Probability of mutation occuring]
+        weights [numpy array]: [Weights of agent]
 
     Returns:
-        parent1Coeff [numpy array]: [the new weights for each parent]
-        parent2Coeff [numpy array]: [the new weights for each parent]
+        weights [numpy array]: [the new weights for agent]
     """
-    layer1 = np.random.randint(0,  len(parent1Coeff))
-    row1 = np.random.randint(0,  len(parent1Coeff[0]))
-    layer2 = np.random.randint(0,  len(parent2Coeff))
-    row2 = np.random.randint(0,  len(parent2Coeff[0]))
+    layer1 = np.random.randint(0,  len(weights))
+    row1 = np.random.randint(0,  len(weights[0]))
+    layer2 = np.random.randint(0,  len(weights))
+    row2 = np.random.randint(0,  len(weights[0]))
+    tmp = weights[[layer1, row1]]
+    weights[[layer1, row1]] = weights[[layer2, row2]]
+    weights[[layer2, row2]] = tmp
 
-    if(random.random() < mutationRate):
-        tmp = parent1Coeff[[layer1, row1]]
-        parent1Coeff[[layer1, row1]] = parent2Coeff[[layer2, row2]]
-        parent2Coeff[[layer2, row2]] = tmp
-
-    return parent1Coeff, parent2Coeff
+    return weights
 
 
 def breedArch(nn1, nn2):
