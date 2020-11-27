@@ -37,6 +37,30 @@ def initialise_population(size, env):
     return population
 
 
+    def testMutation(coefL_crossover): #rate
+    # Mutation changes a single gene in each offspring randomly.
+        for idx in range(coefL_crossover.shape[0]):
+        # The random value to be added to the gene.
+            random_value = numpy.random.uniform(-1.0, 1.0, 1)
+
+            coefL_crossover[idx, 4] = coefL_crossover[idx, 4] + random_value
+
+        return coefL_crossover
+
+def swapMutation(coefL_crossover, mutationRate):
+    
+    for swapped in range(len(coefL_crossover)):
+
+        if(random.random() < mutationRate):
+            swapWith = int(random.random() * len(coefL_crossover))
+        
+            coef1 = coefL_crossover[swapped]
+            coef2 = coefL_crossover[swapWith]
+            
+            coefL_crossover[swapped] = coef2
+            coefL_crossover[swapWith] = coef1
+    return coefL_crossover
+    
 def breedArch(nn1, nn2):
     """[Breeds a child from 2 parents using crossover].
 
