@@ -7,6 +7,7 @@ Functions:
 
 from sklearn.neural_network import MLPClassifier
 import numpy as np
+import random
 
 
 def initialise_population(size, env):
@@ -34,3 +35,34 @@ def initialise_population(size, env):
                           classes=np.arange(env.action_space.n))
         )
     return population
+
+
+def breedArch(nn1, nn2):
+    """[Breeds a child from 2 parents using crossover].
+
+    Args:
+        nn1 ([MLPClassifier]): [Neural network parent nr 1]
+        nn2 ([MLPClassifier]): [Neural network parent nr 2]
+
+    Returns:
+        [newcoef, newinter]: [List of coefs_ and intercepts_]
+    """
+    coef1 = nn1.coefs_
+    coef2 = nn2.coefs_
+    inter1 = nn1.intercepts_
+    inter2 = nn2.intercepts_
+    newcoef = []
+    newinter = []
+
+    for i in range(min(len(coef1), len(coef2))):
+        if random.random() >= 0.5:
+            newcoef.append(coef1[i])
+        else:
+            newcoef.append(coef2[i])
+
+        if random.random() >= 0.5:
+            newinter.append(inter1[i])
+        else:
+            newinter.append(inter2[i])
+
+    return newcoef, newinter

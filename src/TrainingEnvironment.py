@@ -3,9 +3,10 @@
 import gym
 import numpy as np
 import functions
+import copy
 
 population_size = 50
-generations = 1  # 15
+generations = 4  # 15
 mutation_rate = 0.001
 
 env = gym.make('CartPole-v1')
@@ -33,6 +34,18 @@ for i in range(generations):
             terminate = done
 
         fit[n] = score
+
+    score_probability = fit/sum(fit)
+    parents_index = np.argsort(-score_probability)[:2]
+
+    parent1 = copy.copy(population[parents_index[0]])
+    parent2 = copy.copy(population[parents_index[1]])
+
+    # Breed new nn's
+    for j in range(population_size):
+        newCoef, newInter = functions.breedArch(parent1, parent2)
+        population[j].coefs_ = newCoef
+        population[j].intercepts_ = newInter
 
 print(fit)
 env.close()
