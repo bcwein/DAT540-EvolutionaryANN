@@ -37,31 +37,22 @@ def initialise_population(size, env):
     return population
 
 
-    def testMutation(coefL_crossover): #rate
-    # Mutation changes a single gene in each offspring randomly.
-        for idx in range(coefL_crossover.shape[0]):
-        # The random value to be added to the gene.
-            random_value = numpy.random.uniform(-1.0, 1.0, 1)
-
-            coefL_crossover[idx, 4] = coefL_crossover[idx, 4] + random_value
-
-        return coefL_crossover
-
 def swapMutation(coefL_crossover, mutationRate):
-    
+
     for swapped in range(len(coefL_crossover)):
 
         if(random.random() < mutationRate):
             swapWith = int(random.random() * len(coefL_crossover))
-        
+
             coef1 = coefL_crossover[swapped]
             coef2 = coefL_crossover[swapWith]
-            
+
             coefL_crossover[swapped] = coef2
             coefL_crossover[swapWith] = coef1
     return coefL_crossover
-    
-def breedArch(nn1, nn2):
+
+
+def breedCrossover(nn2, nn1):
     """[Breeds a child from 2 parents using crossover].
 
     Args:
@@ -71,22 +62,35 @@ def breedArch(nn1, nn2):
     Returns:
         [newcoef, newinter]: [List of coefs_ and intercepts_]
     """
-    coef1 = nn1.coefs_
-    coef2 = nn2.coefs_
-    inter1 = nn1.intercepts_
-    inter2 = nn2.intercepts_
-    newcoef = []
-    newinter = []
+    layer = random.randint(0, 1)
+    shape = nn2.coefs_[layer].shape
 
-    for i in range(min(len(coef1), len(coef2))):
-        if random.random() >= 0.5:
-            newcoef.append(coef1[i])
-        else:
-            newcoef.append(coef2[i])
+    coefFlat1 = np.ravel(nn1.coefs_[layer])
+    coefFlat2 = np.ravel(nn2.coefs_[layer])
 
-        if random.random() >= 0.5:
-            newinter.append(inter1[i])
-        else:
-            newinter.append(inter2[i])
+    indexes = sorted([int(random.random() * len(coefFlat1)),
+                      int(random.random() * len(coefFlat1))])
 
-    return newcoef, newinter
+    coefFlat2[indexes[0]:indexes[1]] = coefFlat1[indexes[0]:indexes[1]]
+
+    newCoefs = []
+    newCoefs.insert(layer, np.array(coefFlat2).reshape(shape))
+    newCoefs.insert(1 - layer, nn2.coefs_[1 - layer])
+
+    ###########################################################################
+
+    shape = nn2.intercepts_[layer].shape
+
+    interFlat1 = np.ravel(nn1.intercepts_[layer])
+    interFlat2 = np.ravel(nn2.intercepts_[layer])
+
+    indexes = sorted([int(random.random() * len(coefFlat1)),
+                      int(random.random() * len(coefFlat1))])
+
+    interFlat2[indexes[0]:indexes[1]] = interFlat1[indexes[0]:indexes[1]]
+
+    newInters = []
+    newInters.insert(layer, np.array(interFlat2).reshape(shape))
+    newInters.insert(1 - layer, nn2.intercepts_[1 - layer])
+
+    return newCoefs, newInters

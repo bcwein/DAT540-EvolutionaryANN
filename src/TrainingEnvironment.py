@@ -6,7 +6,7 @@ import functions
 import copy
 
 population_size = 50
-generations = 4  # 15
+generations = 5 # 15
 mutation_rate = 0.001
 
 env = gym.make('CartPole-v1')
@@ -43,9 +43,9 @@ for i in range(generations):
 
     # Breed new nn's
     for j in range(population_size):
-        newCoef, newInter = functions.breedArch(parent1, parent2)
+        newCoef, newInter = functions.breedCrossover(parent1, parent2)
         population[j].coefs_ = newCoef
         population[j].intercepts_ = newInter
 
-print(fit)
+    print(fit)
 env.close()
