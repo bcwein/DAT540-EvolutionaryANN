@@ -6,7 +6,7 @@ import functions
 import copy
 
 population_size = 50
-generations = 5 # 15
+generations = 10 # 15
 mutation_rate = 0.001
 
 env = gym.make('CartPole-v1')
@@ -56,6 +56,6 @@ for i in range(generations):
         max_score = current_best_score
         best_network = population[current_best_index]
 
-    print(f'Average: {np.average(fit)} | Best: {current_best_score}')
+    print(f'Gen {i}: Average: {np.average(fit)} | Best: {current_best_score}')
 functions.show_simulation(best_network, env)
 env.close()
