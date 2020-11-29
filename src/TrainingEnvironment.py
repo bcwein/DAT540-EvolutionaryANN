@@ -47,8 +47,7 @@ for i in range(generations):
         newCoef, newInter = functions.breedArch(parent1, parent2)
         population[j].coefs_ = newCoef
         population[j].intercepts_ = newInter
-        if(random.random() < mutation_rate):
-            population[j].coefs_ = functions.swapMutation(population[j].coefs_)
-
+        population[j] = functions.mutationFunc_W_B(population[j],
+                                                   mutation_rate)
 print(fit)
 env.close()
