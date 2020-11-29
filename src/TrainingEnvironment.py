@@ -47,5 +47,5 @@ for i in range(generations):
         population[j].coefs_ = newCoef
         population[j].intercepts_ = newInter
 
-    print(fit)
+    print(f'Average: {np.average(fit)} | Best: {np.max(fit)}')
 env.close()
