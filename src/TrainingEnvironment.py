@@ -8,7 +8,7 @@ import random
 
 population_size = 50
 generations = 5  # 15
-mutation_rate = 0.001
+mutation_rate = 0.01
 
 env = gym.make('CartPole-v1')
 env._max_episode_steps = np.inf
