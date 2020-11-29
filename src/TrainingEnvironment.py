@@ -48,8 +48,6 @@ for i in range(generations):
         population[j].coefs_ = newCoef
         population[j].intercepts_ = newInter
 
-    # Network based on average weight and bias over all levels
-    average_network = functions.average_weight_and_bias(population, env)
 
     current_best_index = np.argmax(fit)
     current_best_score = fit[current_best_index]
@@ -61,6 +59,9 @@ for i in range(generations):
     print(f'Gen {i}: Average: {np.average(fit)} | Best: {current_best_score}')
 
 functions.show_simulation(best_network, env)
-# Currently running the average from the final generation
+
+# Network based on average weight and bias over all levels
+average_network = functions.average_weight_and_bias(population, env)
 functions.show_simulation(average_network, env)
+
 env.close()

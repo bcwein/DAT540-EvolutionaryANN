@@ -128,8 +128,9 @@ def show_simulation(network, env):
     return score
 
 def average_weight_and_bias(population, env):
-    """ Creates a new MLPCLassifier
+    """ Calculates the average weight and bias from a given population
     Args:
+        population: The population from which to calculate
         env: The environment to get training samples from
 
     Returns:
