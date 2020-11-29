@@ -94,3 +94,21 @@ def breedCrossover(nn2, nn1):
     newInters.insert(1 - layer, nn2.intercepts_[1 - layer])
 
     return newCoefs, newInters
+
+def show_simulation(network, env):
+    observation = env.reset()
+    score = 0
+    actions = np.empty(5)
+    terminate = False
+    while not(terminate):
+        j = 0
+        action = int(network.predict(
+            observation.reshape(1, -1).reshape(1, -1)))
+        if j > 5 and sum(actions) % 5 == 0:
+            action = env.action_space.sample()
+        observation, reward, terminate, info = env.step(action)
+        score += reward
+        j += 1
+        actions[j % 5] = action
+        env.render()
+    return score
