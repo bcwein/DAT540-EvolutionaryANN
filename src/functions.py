@@ -8,6 +8,7 @@ Functions:
 from sklearn.neural_network import MLPClassifier
 import numpy as np
 import random
+import copy
 
 
 def initialise_population(size, env):
@@ -37,32 +38,35 @@ def initialise_population(size, env):
     return population
 
 
-def swapMutation(weights):
-    """[Mutate weights of parents to avoid local minima].
+# Created a mutation function to mutate both weights and biases for an agent
+def mutationFunc_W_B(agent, mutation_rate):
+    for item in range(2):
+        if item == 0:
+            node_item = agent.coefs_
+        else:
+            node_item = agent.intercepts_
+           
+        for i in range(len(node_item)):
+            for swappedRow in range(len(node_item[i])):
+                if (random.random()<mutation_rate):
+                    rowToSwapWith = int(random.random()*len(node_item[i]))
+                    row1 = copy.copy(node_item[i][swappedRow])
+                    #print(row1)
+                    row2 = copy.copy(node_item[i][rowToSwapWith])
+                    #print(row2)
+                    node_item[i][swappedRow] = row2
+                    node_item[i][rowToSwapWith] = row1
+                   
+        if item == 0:            
+            agent.coefs_ = node_item
+        else:
+            agent.intercepts_ = node_item
 
-    Algorithm:
-        1. Select two random pair of rows and indexes.
-        2. Swap the weights of the two indexes.
-        3. (to be implemented) do the same for bias.
-
-    Args:
-        weights [numpy array]: [Weights of agent]
-
-    Returns:
-        weights [numpy array]: [the new weights for agent]
-    """
-    layer1 = np.random.randint(0,  len(weights))
-    row1 = np.random.randint(0,  len(weights[0]))
-    layer2 = np.random.randint(0,  len(weights))
-    row2 = np.random.randint(0,  len(weights[0]))
-    tmp = weights[[layer1, row1]]
-    weights[[layer1, row1]] = weights[[layer2, row2]]
-    weights[[layer2, row2]] = tmp
-
-    return weights
+    return agent
 
 
-def breedArch(nn1, nn2):
+
+def breedCrossover(nn2, nn1):
     """[Breeds a child from 2 parents using crossover].
 
     Args:
@@ -72,22 +76,35 @@ def breedArch(nn1, nn2):
     Returns:
         [newcoef, newinter]: [List of coefs_ and intercepts_]
     """
-    coef1 = nn1.coefs_
-    coef2 = nn2.coefs_
-    inter1 = nn1.intercepts_
-    inter2 = nn2.intercepts_
-    newcoef = []
-    newinter = []
+    layer = random.randint(0, 1)
+    shape = nn2.coefs_[layer].shape
 
-    for i in range(min(len(coef1), len(coef2))):
-        if random.random() >= 0.5:
-            newcoef.append(coef1[i])
-        else:
-            newcoef.append(coef2[i])
+    coefFlat1 = np.ravel(nn1.coefs_[layer])
+    coefFlat2 = np.ravel(nn2.coefs_[layer])
 
-        if random.random() >= 0.5:
-            newinter.append(inter1[i])
-        else:
-            newinter.append(inter2[i])
+    indexes = sorted([int(random.random() * len(coefFlat1)),
+                      int(random.random() * len(coefFlat1))])
 
-    return newcoef, newinter
+    coefFlat2[indexes[0]:indexes[1]] = coefFlat1[indexes[0]:indexes[1]]
+
+    newCoefs = []
+    newCoefs.insert(layer, np.array(coefFlat2).reshape(shape))
+    newCoefs.insert(1 - layer, nn2.coefs_[1 - layer])
+
+    ###########################################################################
+
+    shape = nn2.intercepts_[layer].shape
+
+    interFlat1 = np.ravel(nn1.intercepts_[layer])
+    interFlat2 = np.ravel(nn2.intercepts_[layer])
+
+    indexes = sorted([int(random.random() * len(coefFlat1)),
+                      int(random.random() * len(coefFlat1))])
+
+    interFlat2[indexes[0]:indexes[1]] = interFlat1[indexes[0]:indexes[1]]
+
+    newInters = []
+    newInters.insert(layer, np.array(interFlat2).reshape(shape))
+    newInters.insert(1 - layer, nn2.intercepts_[1 - layer])
+
+    return newCoefs, newInters
