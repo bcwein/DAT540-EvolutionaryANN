@@ -15,7 +15,7 @@ env._max_episode_steps = np.inf
 population = functions.initialise_population(population_size, env)
 fit = np.zeros(population_size)
 max_score = 0
-best_network = None
+
 for i in range(generations):
     for n, agent in enumerate(population):
         observation = env.reset()

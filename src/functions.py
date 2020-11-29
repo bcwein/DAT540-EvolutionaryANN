@@ -103,10 +103,9 @@ def breedCrossover(nn2, nn1):
     return newCoefs, newInters
 
 def show_simulation(network, env):
-    """
-        Displays a simulation of a single given network in a given environment
+    """Displays a simulation of a single given network in a given environment
 
-        Parameters:
+        Args:
             network (MLPClassifier): The network to use for simulation
             env (TimeLimit): An OpenAI gym environment in which to run the simulation 
     """
