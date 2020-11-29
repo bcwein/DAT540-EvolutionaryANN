@@ -9,6 +9,25 @@ from sklearn.neural_network import MLPClassifier
 import numpy as np
 import random
 
+def create_new_network(env):
+    """ Creates a new MLPCLassifier
+    Args:
+        env: The environment to get training samples from
+
+    Returns:
+        MLPClassifier: The new NN partially fitted to sample data from the environment
+    """
+    return MLPClassifier(
+    batch_size=1,
+    max_iter=1,
+    solver='sgd',
+    activation='relu',
+    learning_rate='invscaling',
+    hidden_layer_sizes=4,
+    random_state=1
+    ).partial_fit(np.array([env.observation_space.sample()]),
+                np.array([env.action_space.sample()]),
+                classes=np.arange(env.action_space.n))
 
 def initialise_population(size, env):
     """[Initialise size number of agents].
@@ -21,19 +40,7 @@ def initialise_population(size, env):
     """
     population = []
     for _ in range(size):
-        population.append(
-            MLPClassifier(
-                batch_size=1,
-                max_iter=1,
-                solver='sgd',
-                activation='relu',
-                learning_rate='invscaling',
-                hidden_layer_sizes=4,
-                random_state=1
-            ).partial_fit(np.array([env.observation_space.sample()]),
-                          np.array([env.action_space.sample()]),
-                          classes=np.arange(env.action_space.n))
-        )
+        population.append(create_new_network(env))
     return population
 
 
