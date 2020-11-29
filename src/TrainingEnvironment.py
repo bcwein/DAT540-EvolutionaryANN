@@ -6,7 +6,7 @@ import functions
 import copy
 
 population_size = 50
-generations = 1 #15
+generations = 5 # 15
 mutation_rate = 0.001
 
 env = gym.make('CartPole-v1')
@@ -48,15 +48,8 @@ for i in range(generations):
         population[j].coefs_ = newCoef
         population[j].intercepts_ = newInter
 
-    coef0 = np.mean(np.array([coef.coefs_[0] for coef in population]), axis=0)
-    coef1 = np.mean(np.array([coef.coefs_[1] for coef in population]), axis=0)
-    intercept0 = np.mean(np.array([intercept.intercepts_[0] for intercept in population]), axis=0)
-    intercept1 = np.mean(np.array([intercept.intercepts_[1] for intercept in population]), axis=0)
-    average_coef = [coef0, coef1]
-    average_intercept = [intercept0, intercept1]
-
-    print("averate coef: ", average_coef)
-    print("averate intercept: ", average_intercept)
+    # Network based on average weight and bias over all levels
+    average_network = functions.average_weight_and_bias(population, env)
 
     current_best_index = np.argmax(fit)
     current_best_score = fit[current_best_index]
@@ -65,8 +58,9 @@ for i in range(generations):
         max_score = current_best_score
         best_network = population[current_best_index]
 
-    print(f'Average: {np.average(fit)} | Best: {current_best_score}')
+    print(f'Gen {i}: Average: {np.average(fit)} | Best: {current_best_score}')
 
 functions.show_simulation(best_network, env)
-
+# Currently running the average from the final generation
+functions.show_simulation(average_network, env)
 env.close()
