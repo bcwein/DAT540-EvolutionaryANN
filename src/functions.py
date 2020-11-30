@@ -14,6 +14,8 @@ import copy
 def create_new_network(env):
     """Create a new MLPCLassifier.
 
+    Author: Marius Sørensen
+
     Args:
         env: The environment to get training samples from
 
@@ -129,6 +131,8 @@ def breedCrossover(nn1, nn2):
 
 def show_simulation(network, env):
     """Display a simulation of a single given network in a given environment.
+
+    Author: Marius Sørensen
 
     Args:
         network (MLPClassifier): The network to use for simulation
