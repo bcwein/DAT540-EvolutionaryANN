@@ -10,25 +10,29 @@ import numpy as np
 import random
 import copy
 
+
 def create_new_network(env):
-    """ Creates a new MLPCLassifier
+    """Create a new MLPCLassifier.
+
     Args:
         env: The environment to get training samples from
 
     Returns:
-        MLPClassifier: The new NN partially fitted to sample data from the environment
+        MLPClassifier: The new NN partially fitted to
+        sample data from the environment
     """
     return MLPClassifier(
-    batch_size=1,
-    max_iter=1,
-    solver='sgd',
-    activation='relu',
-    learning_rate='invscaling',
-    hidden_layer_sizes=4,
-    random_state=1
+        batch_size=1,
+        max_iter=1,
+        solver='sgd',
+        activation='relu',
+        learning_rate='invscaling',
+        hidden_layer_sizes=4,
+        random_state=1
     ).partial_fit(np.array([env.observation_space.sample()]),
-                np.array([env.action_space.sample()]),
-                classes=np.arange(env.action_space.n))
+                  np.array([env.action_space.sample()]),
+                  classes=np.arange(env.action_space.n))
+
 
 def initialise_population(size, env):
     """[Initialise size number of agents].
@@ -45,45 +49,75 @@ def initialise_population(size, env):
     return population
 
 
-def swapMutation(coefL_crossover, mutationRate):
+# Created a mutation function to mutate both weights and biases for an agent
+def mutationFunc_W_B(agent, mutation_rate):
+    """Mutation function to mutate both weights and biases for an agent.
 
-    for swapped in range(len(coefL_crossover)):
+    Args:
+        agent ([MLPClassifier]): [Neural network of agent]
+        mutation_rate ([float]): [probability of mutation]
 
-        if(random.random() < mutationRate):
-            swapWith = int(random.random() * len(coefL_crossover))
-
-            coef1 = coefL_crossover[swapped]
-            coef2 = coefL_crossover[swapWith]
-
-            coefL_crossover[swapped] = coef2
-            coefL_crossover[swapWith] = coef1
-    return coefL_crossover
-
-def mutationFunc_W_B(agent,mutation_rate): #Created a mutation function to mutate both weights and biases for an agent
+    Returns:
+        [agent]: [Mutated agent]
+    """
     for item in range(2):
         if item == 0:
             node_item = agent.coefs_
         else:
             node_item = agent.intercepts_
-           
+
         for i in range(len(node_item)):
             for swappedRow in range(len(node_item[i])):
-                if (random.random()<mutation_rate):
+                if (random.random() < mutation_rate):
                     rowToSwapWith = int(random.random()*len(node_item[i]))
                     row1 = copy.copy(node_item[i][swappedRow])
-                    #print(row1)
+                    # print(row1)
                     row2 = copy.copy(node_item[i][rowToSwapWith])
-                    #print(row2)
+                    # print(row2)
                     node_item[i][swappedRow] = row2
                     node_item[i][rowToSwapWith] = row1
-                   
-        if item == 0:            
+
+        if item == 0:
             agent.coefs_ = node_item
         else:
             agent.intercepts_ = node_item
 
     return agent
 
+
+def mutationFunc_W_B(agent, mutation_rate):
+    """Mutate agents weights and biases.
+
+    Args:
+        agent ([MLPClassifier]): [Neural Network of agent]
+        mutation_rate ([float]): [Probability of mutation]
+
+    Returns:
+        [type]: [description]
+    """
+    for item in range(2):
+        if item == 0:
+            node_item = agent.coefs_
+        else:
+            node_item = agent.intercepts_
+
+        for i in range(len(node_item)):
+            for swappedRow in range(len(node_item[i])):
+                if (random.random() < mutation_rate):
+                    rowToSwapWith = int(random.random()*len(node_item[i]))
+                    row1 = copy.copy(node_item[i][swappedRow])
+                    # print(row1)
+                    row2 = copy.copy(node_item[i][rowToSwapWith])
+                    # print(row2)
+                    node_item[i][swappedRow] = row2
+                    node_item[i][rowToSwapWith] = row1
+
+        if item == 0:
+            agent.coefs_ = node_item
+        else:
+            agent.intercepts_ = node_item
+
+    return agent
 
 
 def breedCrossover(nn2, nn1):
@@ -129,12 +163,14 @@ def breedCrossover(nn2, nn1):
 
     return newCoefs, newInters
 
-def show_simulation(network, env):
-    """Displays a simulation of a single given network in a given environment
 
-        Args:
-            network (MLPClassifier): The network to use for simulation
-            env (TimeLimit): An OpenAI gym environment in which to run the simulation 
+def show_simulation(network, env):
+    """Display a simulation of a single given network in a given environment.
+
+    Args:
+        network (MLPClassifier): The network to use for simulation
+        env (TimeLimit): An OpenAI gym environment in which to
+        run the simulation
     """
     observation = env.reset()
     score = 0
@@ -153,8 +189,10 @@ def show_simulation(network, env):
         env.render()
     return score
 
+
 def average_weight_and_bias(population, env):
-    """ Calculates the average weight and bias from a given population
+    """Calculate the average weight and bias from a given population.
+
     Args:
         population: The population from which to calculate
         env: The environment to get training samples from
@@ -165,9 +203,17 @@ def average_weight_and_bias(population, env):
     coef0 = np.mean(np.array([coef.coefs_[0] for coef in population]), axis=0)
     coef1 = np.mean(np.array([coef.coefs_[1] for coef in population]), axis=0)
     average_weight = [coef0, coef1]
-    
-    intercept0 = np.mean(np.array([intercept.intercepts_[0] for intercept in population]), axis=0)
-    intercept1 = np.mean(np.array([intercept.intercepts_[1] for intercept in population]), axis=0)
+
+    intercept0 = np.mean(
+        np.array([intercept.intercepts_[0] for intercept in population]),
+        axis=0
+    )
+
+    intercept1 = np.mean(
+        np.array([intercept.intercepts_[1] for intercept in population]),
+        axis=0
+    )
+
     average_bias = [intercept0, intercept1]
 
     # Create new network with the averages

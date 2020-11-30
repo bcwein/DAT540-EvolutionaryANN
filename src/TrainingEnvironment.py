@@ -4,10 +4,11 @@ import gym
 import numpy as np
 import functions
 import copy
+import random
 
 population_size = 50
-generations = 5 # 15
-mutation_rate = 0.001
+generations = 5  # 15
+mutation_rate = 0.01
 
 env = gym.make('CartPole-v1')
 env._max_episode_steps = np.inf
@@ -47,14 +48,15 @@ for i in range(generations):
         newCoef, newInter = functions.breedCrossover(parent1, parent2)
         population[j].coefs_ = newCoef
         population[j].intercepts_ = newInter
+        population[j] = functions.mutationFunc_W_B(population[j],
+                                                   mutation_rate)
 
+        current_best_index = np.argmax(fit)
+        current_best_score = fit[current_best_index]
 
-    current_best_index = np.argmax(fit)
-    current_best_score = fit[current_best_index]
-
-    if(current_best_score > max_score):
-        max_score = current_best_score
-        best_network = population[current_best_index]
+        if(current_best_score > max_score):
+            max_score = current_best_score
+            best_network = population[current_best_index]
 
     print(f'Gen {i}: Average: {np.average(fit)} | Best: {current_best_score}')
 
