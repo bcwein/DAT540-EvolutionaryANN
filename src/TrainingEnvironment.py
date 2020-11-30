@@ -14,6 +14,8 @@ env._max_episode_steps = np.inf
 
 population = functions.initialise_population(population_size, env)
 fit = np.zeros(population_size)
+max_score = 0
+
 for i in range(generations):
     for n, agent in enumerate(population):
         observation = env.reset()
@@ -30,7 +32,6 @@ for i in range(generations):
             score += reward
             j += 1
             actions[j % 5] = action
-            env.render()
             terminate = done
 
         fit[n] = score
@@ -47,5 +48,20 @@ for i in range(generations):
         population[j].coefs_ = newCoef
         population[j].intercepts_ = newInter
 
-    print(fit)
+
+    current_best_index = np.argmax(fit)
+    current_best_score = fit[current_best_index]
+
+    if(current_best_score > max_score):
+        max_score = current_best_score
+        best_network = population[current_best_index]
+
+    print(f'Gen {i}: Average: {np.average(fit)} | Best: {current_best_score}')
+
+functions.show_simulation(best_network, env)
+
+# Network based on average weight and bias over all levels
+average_network = functions.average_weight_and_bias(population, env)
+functions.show_simulation(average_network, env)
+
 env.close()
