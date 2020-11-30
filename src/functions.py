@@ -8,6 +8,7 @@ Functions:
 from sklearn.neural_network import MLPClassifier
 import numpy as np
 import random
+import copy
 
 
 def initialise_population(size, env):
@@ -50,6 +51,32 @@ def swapMutation(coefL_crossover, mutationRate):
             coefL_crossover[swapped] = coef2
             coefL_crossover[swapWith] = coef1
     return coefL_crossover
+
+def mutationFunc_W_B(agent,mutation_rate): #Created a mutation function to mutate both weights and biases for an agent
+    for item in range(2):
+        if item == 0:
+            node_item = agent.coefs_
+        else:
+            node_item = agent.intercepts_
+           
+        for i in range(len(node_item)):
+            for swappedRow in range(len(node_item[i])):
+                if (random.random()<mutation_rate):
+                    rowToSwapWith = int(random.random()*len(node_item[i]))
+                    row1 = copy.copy(node_item[i][swappedRow])
+                    #print(row1)
+                    row2 = copy.copy(node_item[i][rowToSwapWith])
+                    #print(row2)
+                    node_item[i][swappedRow] = row2
+                    node_item[i][rowToSwapWith] = row1
+                   
+        if item == 0:            
+            agent.coefs_ = node_item
+        else:
+            agent.intercepts_ = node_item
+
+    return agent
+
 
 
 def breedCrossover(nn2, nn1):

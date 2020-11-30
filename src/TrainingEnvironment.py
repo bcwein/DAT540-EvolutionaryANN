@@ -30,7 +30,7 @@ for i in range(generations):
             score += reward
             j += 1
             actions[j % 5] = action
-            # env.render()
+            env.render()
             terminate = done
 
         fit[n] = score
