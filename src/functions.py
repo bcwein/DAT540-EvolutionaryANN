@@ -71,9 +71,7 @@ def mutationFunc_W_B(agent, mutation_rate):
                 if (random.random() < mutation_rate):
                     rowToSwapWith = int(random.random()*len(node_item[i]))
                     row1 = copy.copy(node_item[i][swappedRow])
-                    # print(row1)
                     row2 = copy.copy(node_item[i][rowToSwapWith])
-                    # print(row2)
                     node_item[i][swappedRow] = row2
                     node_item[i][rowToSwapWith] = row1
 
@@ -85,42 +83,7 @@ def mutationFunc_W_B(agent, mutation_rate):
     return agent
 
 
-def mutationFunc_W_B(agent, mutation_rate):
-    """Mutate agents weights and biases.
-
-    Args:
-        agent ([MLPClassifier]): [Neural Network of agent]
-        mutation_rate ([float]): [Probability of mutation]
-
-    Returns:
-        [type]: [description]
-    """
-    for item in range(2):
-        if item == 0:
-            node_item = agent.coefs_
-        else:
-            node_item = agent.intercepts_
-
-        for i in range(len(node_item)):
-            for swappedRow in range(len(node_item[i])):
-                if (random.random() < mutation_rate):
-                    rowToSwapWith = int(random.random()*len(node_item[i]))
-                    row1 = copy.copy(node_item[i][swappedRow])
-                    # print(row1)
-                    row2 = copy.copy(node_item[i][rowToSwapWith])
-                    # print(row2)
-                    node_item[i][swappedRow] = row2
-                    node_item[i][rowToSwapWith] = row1
-
-        if item == 0:
-            agent.coefs_ = node_item
-        else:
-            agent.intercepts_ = node_item
-
-    return agent
-
-
-def breedCrossover(nn2, nn1):
+def breedCrossover(nn1, nn2):
     """[Breeds a child from 2 parents using crossover].
 
     Args:
@@ -145,7 +108,7 @@ def breedCrossover(nn2, nn1):
     newCoefs.insert(layer, np.array(coefFlat2).reshape(shape))
     newCoefs.insert(1 - layer, nn2.coefs_[1 - layer])
 
-    ###########################################################################
+    ###################################################################
 
     shape = nn2.intercepts_[layer].shape
 
@@ -182,7 +145,7 @@ def show_simulation(network, env):
             observation.reshape(1, -1).reshape(1, -1)))
         if j > 5 and sum(actions) % 5 == 0:
             action = env.action_space.sample()
-        observation, reward, terminate, info = env.step(action)
+        observation, reward, terminate, _ = env.step(action)
         score += reward
         j += 1
         actions[j % 5] = action
@@ -190,19 +153,18 @@ def show_simulation(network, env):
     return score
 
 
-def average_weight_and_bias(population, env):
+def average_weight_and_bias(population):
     """Calculate the average weight and bias from a given population.
 
     Args:
         population: The population from which to calculate
-        env: The environment to get training samples from
 
     Returns:
-        average_network: A new NN created using the MLPClassifier
+        [coefs]: The average weights of the populaiton
+        [intercepts]: The average biases of the population
     """
     coef0 = np.mean(np.array([coef.coefs_[0] for coef in population]), axis=0)
     coef1 = np.mean(np.array([coef.coefs_[1] for coef in population]), axis=0)
-    average_weight = [coef0, coef1]
 
     intercept0 = np.mean(
         np.array([intercept.intercepts_[0] for intercept in population]),
@@ -214,11 +176,4 @@ def average_weight_and_bias(population, env):
         axis=0
     )
 
-    average_bias = [intercept0, intercept1]
-
-    # Create new network with the averages
-    average_network = create_new_network(env)
-    average_network.coefs_ = average_weight
-    average_network.intercepts_ = average_bias
-
-    return average_network
+    return [coef0, coef1], [intercept0, intercept1]

@@ -4,11 +4,11 @@ import gym
 import numpy as np
 import functions
 import copy
-import random
 
 population_size = 50
-generations = 5  # 15
-mutation_rate = 0.01
+generations = 15
+mutation_rate = 0.05  # 0.001
+avgAgents = []
 
 env = gym.make('CartPole-v1')
 env._max_episode_steps = np.inf
@@ -29,11 +29,12 @@ for i in range(generations):
                 observation.reshape(1, -1).reshape(1, -1)))
             if j > 5 and sum(actions) % 5 == 0:
                 action = env.action_space.sample()
-            observation, reward, done, info = env.step(action)
+            observation, reward, done, _ = env.step(action)
             score += reward
             j += 1
             actions[j % 5] = action
             terminate = done
+            terminate = True if score > 50000 else terminate  # Comment out if desired
 
         fit[n] = score
 
@@ -42,6 +43,12 @@ for i in range(generations):
 
     parent1 = copy.copy(population[parents_index[0]])
     parent2 = copy.copy(population[parents_index[1]])
+
+    avgCoefs, avgIntercepts = functions.average_weight_and_bias(population)
+    avgAgent = functions.create_new_network(env)
+    avgAgent.coefs_ = avgCoefs
+    avgAgent.intercepts_ = avgIntercepts
+    avgAgents.append(avgAgent)
 
     # Breed new nn's
     for j in range(population_size):
@@ -58,12 +65,16 @@ for i in range(generations):
             max_score = current_best_score
             best_network = population[current_best_index]
 
-    print(f'Gen {i}: Average: {np.average(fit)} | Best: {current_best_score}')
-
-functions.show_simulation(best_network, env)
+    print(f'Gen {i+1}: Average: {np.average(fit)} | Best: {current_best_score}')
 
 # Network based on average weight and bias over all levels
-average_network = functions.average_weight_and_bias(population, env)
-functions.show_simulation(average_network, env)
+avgCoef, avgIntercept = functions.average_weight_and_bias(avgAgents)
+avgAgent = functions.create_new_network(env)
+avgAgent.coefs_ = avgCoef
+avgAgent.intercepts_ = avgIntercept
+
+# Render of best and average network
+# functions.show_simulation(best_network, env)
+# functions.show_simulation(avgAgent, env)
 
 env.close()
