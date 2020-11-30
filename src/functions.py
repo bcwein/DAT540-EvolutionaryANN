@@ -14,7 +14,7 @@ import copy
 def create_new_network(env):
     """Create a new MLPCLassifier.
 
-    Author: Marius Sørensen
+    Author: Bjørn Christian Weinbach, Marius Sørensen
 
     Args:
         env: The environment to get training samples from
