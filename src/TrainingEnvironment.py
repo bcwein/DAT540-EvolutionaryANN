@@ -58,12 +58,12 @@ for i in range(generations):
         population[j] = functions.mutationFunc_W_B(population[j],
                                                    mutation_rate)
 
-        current_best_index = np.argmax(fit)
-        current_best_score = fit[current_best_index]
+    current_best_index = np.argmax(fit)
+    current_best_score = fit[current_best_index]
 
-        if(current_best_score > max_score):
-            max_score = current_best_score
-            best_network = population[current_best_index]
+    if(current_best_score > max_score):
+        max_score = current_best_score
+        best_network = population[current_best_index]
 
     print(f'Gen {i+1}: Average: {np.average(fit)} | Best: {current_best_score}')
 
