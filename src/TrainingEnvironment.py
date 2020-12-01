@@ -25,7 +25,9 @@ for i in range(generations):
         score = 0
         actions = np.empty(5)
         terminate = False
-        print("[" + "="*(n + 1) + " "*(population_size - n - 1) + "]", end="\r")
+        print(
+            "[" + "="*(n + 1) + " "*(population_size - n - 1) + "]", end="\r"
+        )
         while not(terminate):
             j = 0
             action = int(agent.predict(
@@ -37,7 +39,7 @@ for i in range(generations):
             j += 1
             actions[j % 5] = action
             terminate = done
-            terminate = True if score > max_training else terminate  # Comment out if desired
+            terminate = True if score > max_training else terminate
         fit[n] = score
 
     score_probability = fit/sum(fit)
@@ -69,7 +71,9 @@ for i in range(generations):
         best_network = copy.copy(population[current_best_index])
 
     print(" " * (population_size + 2), end="\r")
-    print(f'Gen {i+1}: Average: {np.average(fit)} | Best: {current_best_score}')
+    print(
+        f'Gen {i+1}: Average: {np.average(fit)} | Best: {current_best_score}'
+    )
 
 # Network based on average weight and bias over all levels
 avgCoef, avgIntercept = functions.average_weight_and_bias(avgAgents)
