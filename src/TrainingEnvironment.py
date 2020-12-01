@@ -34,8 +34,8 @@ for i in range(generations):
         print(
             "[" + "="*(n + 1) + " "*(population_size - n - 1) + "]", end="\r"
         )
+        j = 0
         while not(terminate):
-            j = 0
             action = int(agent.predict(
                 observation.reshape(1, -1).reshape(1, -1)))
             if j > 5 and sum(actions) % 5 == 0:
