@@ -113,40 +113,52 @@ def breedCrossover(nn1, nn2):
         nn2 ([MLPClassifier]): [Neural network parent nr 2]
 
     Returns:
-        [newcoef, newinter]: [List of coefs_ and intercepts_]
+        [children]: [List of two children containing coefs_ and intercepts_]
     """
     layer = random.randint(0, 1)
-    shape = nn2.coefs_[layer].shape
 
-    coefFlat1 = np.ravel(nn1.coefs_[layer])
-    coefFlat2 = np.ravel(nn2.coefs_[layer])
+    child1 = []
+    child2 = []
 
-    indexes = sorted([int(random.random() * len(coefFlat1)),
-                      int(random.random() * len(coefFlat1))])
+    for i in range(2):
+        if i == 0:
+            param1 = nn1.coefs_
+            param2 = nn2.coefs_
+        else:
+            param1 = nn1.intercepts_
+            param2 = nn2.intercepts_
 
-    coefFlat2[indexes[0]:indexes[1]] = coefFlat1[indexes[0]:indexes[1]]
+        shape = param2[layer].shape
 
-    newCoefs = []
-    newCoefs.insert(layer, np.array(coefFlat2).reshape(shape))
-    newCoefs.insert(1 - layer, nn2.coefs_[1 - layer])
+        paramFlat1 = np.ravel(param1[layer])
+        paramFlat2 = np.ravel(param2[layer])
 
-    ###################################################################
+        indexes = sorted([int(random.random() * len(paramFlat1)),
+                          int(random.random() * len(paramFlat1))])
 
-    shape = nn2.intercepts_[layer].shape
+        # Should consider combining the code chunks beneath into one
 
-    interFlat1 = np.ravel(nn1.intercepts_[layer])
-    interFlat2 = np.ravel(nn2.intercepts_[layer])
+        newFlatParam = copy.copy(paramFlat2)
+        newFlatParam[indexes[0]:indexes[1]] = paramFlat1[indexes[0]:indexes[1]]
 
-    indexes = sorted([int(random.random() * len(coefFlat1)),
-                      int(random.random() * len(coefFlat1))])
+        newParam = []
+        newParam.insert(layer, np.array(newFlatParam).reshape(shape))
+        newParam.insert(1 - layer, param2[1 - layer])
 
-    interFlat2[indexes[0]:indexes[1]] = interFlat1[indexes[0]:indexes[1]]
+        child1.append(newParam)
 
-    newInters = []
-    newInters.insert(layer, np.array(interFlat2).reshape(shape))
-    newInters.insert(1 - layer, nn2.intercepts_[1 - layer])
+        ##########################################################################
 
-    return newCoefs, newInters
+        newFlatParam = copy.copy(paramFlat1)
+        newFlatParam[indexes[0]:indexes[1]] = paramFlat2[indexes[0]:indexes[1]]
+
+        newParam = []
+        newParam.insert(layer, np.array(newFlatParam).reshape(shape))
+        newParam.insert(1 - layer, param1[1 - layer])
+
+        child2.append(newParam)
+
+    return [child1, child2]
 
 
 def show_simulation(network, env):
