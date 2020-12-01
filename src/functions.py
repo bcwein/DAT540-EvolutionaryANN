@@ -48,43 +48,6 @@ def initialise_population(size, env):
         population.append(create_new_network(env))
     return population
 
-
-# Created a mutation function to mutate both weights and biases for an agent
-def mutationFunc_W_B(agent, mutation_rate):
-    """Mutation function to mutate both weights and biases for an agent.
-
-    Args:
-        agent ([MLPClassifier]): [Neural network of agent]
-        mutation_rate ([float]): [probability of mutation]
-
-    Returns:
-        [agent]: [Mutated agent]
-    """
-    for item in range(2):
-        if item == 0:
-            node_item = agent.coefs_
-        else:
-            node_item = agent.intercepts_
-
-        for el in node_item:
-            for swappedRow in el:
-                if (random.random() < mutation_rate):
-                    rowToSwapWith = int(random.random()*len(el))
-
-                    row1 = copy.copy(el[swappedRow])
-                    # print(row1)
-                    row2 = copy.copy(el[rowToSwapWith])
-                    # print(row2)
-                    el[swappedRow] = row2
-                    el[rowToSwapWith] = row1
-
-        if item == 0:
-            agent.coefs_ = node_item
-        else:
-            agent.intercepts_ = node_item
-
-    return agent
-
 # def select_mutation_method(agent, method, mutation_rate):
 #     if(method=='swap'):
 #         mutationFunc_W_B(agent, mutation_rate)
