@@ -53,39 +53,52 @@ def initialise_population(size, env):
         population.append(create_new_network(env))
     return population
 
+# def select_mutation_method(agent, method, mutation_rate):
+#     if(method=='swap'):
+#         mutationFunc_W_B(agent, mutation_rate)
+#     elif(method=='scramble'):
 
-# Created a mutation function to mutate both weights and biases for an agent
-def mutationFunc_W_B(agent, mutation_rate):
-    """Mutation function to mutate both weights and biases for an agent.
+#     elif(method=='inverse'):
 
-    Author: Vegard Rongve
+
+def mutationFunc_W_B(agent, mutation_rate, method):
+    """Mutate agents weights and biases.
+
+    Author:
+        Vegard Rongve, Johanna Kinstad, Ove Jørgensen
 
     Args:
-        agent ([MLPClassifier]): [Neural network of agent]
-        mutation_rate ([float]): [probability of mutation]
+        agent ([MLPClassifier]): [Neural Network of agent]
+        mutation_rate ([float]): [Probability of mutation]
 
     Returns:
-        [agent]: [Mutated agent]
+        [agent]: [Mutated agent]    
     """
     for item in range(2):
         if item == 0:
             node_item = agent.coefs_
         else:
-            node_item = agent.intercepts_
+            node_item = copy.copy(agent.intercepts_)
 
-        for i in range(len(node_item)):
-            for swappedRow in range(len(node_item[i])):
+        for el in node_item:
+            for swappedRow in el:
                 if (random.random() < mutation_rate):
-                    rowToSwapWith = int(random.random()*len(node_item[i]))
-                    row1 = copy.copy(node_item[i][swappedRow])
-                    row2 = copy.copy(node_item[i][rowToSwapWith])
-                    node_item[i][swappedRow] = row2
-                    node_item[i][rowToSwapWith] = row1
+                    random1 = int(random.random()*len(el))
+                    random2 = int(random.random()*len(el))
+                    if(random1>random2):
+                        random2, random1 = random1, random2
+                    
+                    if(method=='swap'):
+                        row1 = copy.copy(swappedRow)
+                        row2 = copy.copy(el[random1])
+                        swappedRow = row2
+                        el[random1] = row1
 
-        if item == 0:
-            agent.coefs_ = node_item
-        else:
-            agent.intercepts_ = node_item
+                    elif(method=='scramble'):
+                        random.shuffle(el[random1:random2])
+
+                    elif(method=='inverse'):
+                        el[random1:random2] = el[random1:random2][::-1]
 
     return agent
 

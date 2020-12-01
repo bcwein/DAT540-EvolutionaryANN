@@ -60,7 +60,8 @@ for i in range(generations):
         population[j].coefs_ = newCoef
         population[j].intercepts_ = newInter
         population[j] = functions.mutationFunc_W_B(population[j],
-                                                   mutation_rate)
+                                                   mutation_rate, 
+                                                   'swap')
 
     current_best_index = np.argmax(fit)
     current_best_score = fit[current_best_index]
