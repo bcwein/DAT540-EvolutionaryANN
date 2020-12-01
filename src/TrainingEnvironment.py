@@ -84,7 +84,7 @@ for i in range(generations):
     for j in range(population_size):
         population[j] = functions.mutationFunc_W_B(population[j],
                                                    mutation_rate,
-                                                   'swap')
+                                                   'uniform')
 
     print(" " * (population_size + 2), end="\r")
     print(
