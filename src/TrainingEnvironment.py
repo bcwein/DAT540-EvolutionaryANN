@@ -8,7 +8,6 @@ import copy
 population_size = 50
 generations = 15
 mutation_rate = 0.001
-max_training = 500
 avgAgents = []
 global_best_score = 0
 scoreList = np.zeros(100)
