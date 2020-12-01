@@ -107,6 +107,6 @@ functions.show_simulation(best_network, env)
 # functions.show_simulation(best_trained, env)
 
 
-functions.nnPerformance(generations,listOfBestScores,listOfAverageScores)
+functions.nnPerformance(generations, listOfBestScores, listOfAverageScores)
 
 env.close()
