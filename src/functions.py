@@ -277,8 +277,8 @@ def nnPerformance(generation, best_score, average_score):
 
     Returns:Plot
     """
-    plt.plot(list(range(generation)), best_score, label="Max score")
-    plt.plot(list(range(generation)), average_score, label="Average score")
+    plt.plot(range(1, generation+1), best_score, label="Max score")
+    plt.plot(range(1, generation+1), average_score, label="Average score")
     plt.legend()
     plt.title('Fitness through the generations')
     plt.xlabel("Generations")

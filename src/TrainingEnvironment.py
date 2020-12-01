@@ -55,6 +55,11 @@ for i in range(generations):
         np.set_printoptions(suppress=True)
         # print(scoreList)
         functions.show_simulation(population[parents_index[0]], env)
+
+        listOfAverageScores.append(np.average(fit))
+        listOfBestScores.append(current_best_score)
+        functions.nnPerformance(len(listOfBestScores),
+                                listOfBestScores, listOfAverageScores)
         break
 
     score_probability = fit/sum(fit)
@@ -109,6 +114,7 @@ for i in range(generations):
 # functions.show_simulation(best_trained, env)
 
 # Plotting only works if the agents fail to reach the goal
-functions.nnPerformance(generations, listOfBestScores, listOfAverageScores)
+functions.nnPerformance(len(listOfBestScores),
+                        listOfBestScores, listOfAverageScores)
 
 env.close()
