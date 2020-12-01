@@ -8,12 +8,11 @@ import copy
 population_size = 50
 generations = 10
 mutation_rate = 0.05  # 0.001
-max_training = 50000
 avgAgents = []
 global_best_score = 0
 
 env = gym.make('CartPole-v1')
-env._max_episode_steps = np.inf
+env._max_episode_steps = 1000
 
 population = functions.initialise_population(population_size, env)
 fit = np.zeros(population_size)
@@ -39,7 +38,6 @@ for i in range(generations):
             j += 1
             actions[j % 5] = action
             terminate = done
-            terminate = True if score > max_training else terminate
         fit[n] = score
 
     score_probability = fit/sum(fit)
