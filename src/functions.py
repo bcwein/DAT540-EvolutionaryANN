@@ -98,8 +98,8 @@ def mutationFunc_W_B(agent, mutation_rate, method):
 
                     elif(method == 'inverse'):
                         el[random1:random2] = el[random1:random2][::-1]
-                    
-                    elif(method =='uniform'):
+
+                    elif(method == 'uniform'):
                         randVal = random.random()
                         el[random1] = randVal
 
@@ -264,7 +264,7 @@ def partial_fit(best_trained, best_network, env):
     return best_trained
 
 
-def mutation_rate(score):
+def mutation_rate(score, goal):
     """Dynamic mutation rate.
 
     Author: Bjørn Christian Weinbach
@@ -278,11 +278,11 @@ def mutation_rate(score):
     Args:
         score (float): [score of best agent]
     """
-    if score > 4000:
+    if score/goal > 0.8:
         return(0.0001)
-    if score > 2000:
+    if score/goal > 0.4:
         return(0.001)
-    elif score > 1000:
+    elif score/goal > 0.2:
         return(0.05)
-    elif score > 0:
+    elif score/goal >= 0:
         return 0.1
