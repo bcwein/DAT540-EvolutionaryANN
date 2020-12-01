@@ -284,3 +284,27 @@ def nnPerformance(generation, best_score, average_score):
     plt.xlabel("Generations")
     plt.ylabel("Fitness")
     plt.show()
+
+
+def mutation_rate(score, goal):
+    """Dynamic mutation rate.
+
+    Author: Bjørn Christian Weinbach
+
+    Algorithm:
+        High mutation rate in beginning -> explores space
+        When good agents are found:
+            Low mutation rate so new agents are similar to
+            previous ones (given that they have a high score)
+
+    Args:
+        score (float): [score of best agent]
+    """
+    if score/goal > 0.8:
+        return(0.0001)
+    if score/goal > 0.4:
+        return(0.001)
+    elif score/goal > 0.2:
+        return(0.05)
+    elif score/goal >= 0:
+        return 0.1

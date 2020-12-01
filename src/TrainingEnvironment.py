@@ -7,13 +7,13 @@ import copy
 
 population_size = 50
 generations = 15
-mutation_rate = 0.001
 avgAgents = []
 global_best_score = 0
 scoreList = np.zeros(100)
 
 env = gym.make('CartPole-v1')
-env._max_episode_steps = 500
+env._max_episode_steps = 5000
+acceptance_rate = 0.95
 
 listOfAverageScores = []
 listOfBestScores = []
@@ -48,7 +48,7 @@ for i in range(generations):
         fit[n] = score
 
         scoreList[(population_size*i+n) % 100] = score
-    if np.mean(scoreList) >= 475:
+    if np.mean(scoreList) >= env._max_episode_steps*acceptance_rate:
         print(" " * (population_size + 2), end="\r")
         print(f"\nSuccess in generation {i+1}!")
         print(f"Current average score: {np.mean(scoreList)}")
@@ -85,9 +85,12 @@ for i in range(generations):
             population[j+k].intercepts_ = children[k][1]
 
     for j in range(population_size):
-        population[j] = functions.mutationFunc_W_B(population[j],
-                                                   mutation_rate,
-                                                   'uniform')
+        population[j] = functions.mutationFunc_W_B(
+            population[j],
+            functions.mutation_rate(current_best_score,
+                                    env._max_episode_steps),
+            'swap'
+        )
 
     print(" " * (population_size + 2), end="\r")
     print(
