@@ -4,6 +4,7 @@ import gym
 import numpy as np
 import functions
 import copy
+import wandb
 
 population_size = 50
 generations = 15
