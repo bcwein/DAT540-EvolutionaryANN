@@ -252,7 +252,7 @@ def partial_fit(best_trained, best_network, env):
         actions[j % 5] = action
         terminate = done
 
-    best_trained.fit(
+    best_trained.partial_fit(
         trainingx,
         trainingy
     )
