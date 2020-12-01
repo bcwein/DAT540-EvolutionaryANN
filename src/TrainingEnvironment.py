@@ -14,7 +14,10 @@ global_best_score = 0
 scoreList = np.zeros(100)
 
 env = gym.make('CartPole-v1')
-env._max_episode_steps = np.inf
+env._max_episode_steps = 500
+
+# Trained agent
+best_trained = functions.create_new_network(env)
 
 population = functions.initialise_population(population_size, env)
 fit = np.zeros(population_size)
@@ -40,7 +43,6 @@ for i in range(generations):
             j += 1
             actions[j % 5] = action
             terminate = done
-            terminate = True if score >= max_training else terminate
         fit[n] = score
 
         scoreList[(population_size*i+n) % 100] = score
@@ -62,6 +64,17 @@ for i in range(generations):
     avgAgent = functions.average_weight_and_bias(population, env)
     avgAgents.append(avgAgent)
 
+    current_best_index = np.argmax(fit)
+    current_best_score = fit[current_best_index]
+
+    # Store current global minimum
+    if(current_best_score >= max_score):
+        max_score = current_best_score
+        best_network = copy.copy(population[current_best_index])
+        best_trained = functions.partial_fit(best_trained,
+                                             best_network,
+                                             env)
+
     # Breed new nn's
     for j in range(0, int(population_size), 2):
         children = functions.breedCrossover(parent1, parent2)
@@ -74,24 +87,18 @@ for i in range(generations):
                                                    mutation_rate,
                                                    'swap')
 
-    current_best_index = np.argmax(fit)
-    current_best_score = fit[current_best_index]
-
-    # Store current global minimum
-    if(current_best_score > max_score):
-        max_score = current_best_score
-        best_network = copy.copy(population[current_best_index])
-
     print(" " * (population_size + 2), end="\r")
     print(
         f'Gen {i+1}: Average: {np.average(fit)} | Best: {current_best_score}'
     )
 
 # Network based on average weight and bias over all levels
-avgAgent = functions.average_weight_and_bias(avgAgents, env)
+# avgAgent = functions.average_weight_and_bias(avgAgents, env)
 
-# Render of best and average network
+# Render of best, average and trained network
 # functions.show_simulation(best_network, env)
 # functions.show_simulation(avgAgent, env)
+# functions.show_simulation(best_trained, env)
+
 
 env.close()

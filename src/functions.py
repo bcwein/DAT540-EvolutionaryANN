@@ -4,6 +4,10 @@ Python helper functions for training agents.
 Functions:
     create_new_network - Create new MLP Classifier.
     initialise_population -  Initalises a population of agents
+    mutationFunc_W_B -  mutate both weights and biases for an agent
+    breedCrossover - Breeds a child from 2 parents using crossover
+    show_simulation - Display a simulation of a single given network
+    average_weight_and_bias - Calculate the average weight and bias
 """
 
 from sklearn.neural_network import MLPClassifier
@@ -63,10 +67,11 @@ def mutationFunc_W_B(agent, mutation_rate, method):
     Args:
         agent ([MLPClassifier]): [Neural Network of agent]
         mutation_rate ([float]): [Probability of mutation]
-        method ([ "swap" | "inverse" | "scramble" ]): [Type of mutation operation]
+        method ([ "swap" | "inverse" | "scramble" ]):
+            [Type of mutation operation]
 
     Returns:
-        [agent]: [Mutated agent]    
+        [agent]: [Mutated agent]
     """
     for item in range(2):
         if item == 0:
@@ -98,7 +103,7 @@ def mutationFunc_W_B(agent, mutation_rate, method):
 
 
 def breedCrossover(nn1, nn2):
-    """[Breeds a child from 2 parents using crossover].
+    """Breeds a child from 2 parents using crossover.
 
     Author: Håvard Godal
 
@@ -143,7 +148,7 @@ def breedCrossover(nn1, nn2):
 
         child1.append(newParam)
 
-        ##########################################################################
+        #######################################################################
 
         newFlatParam = copy.copy(paramFlat1)
         newFlatParam[indexes[0]:indexes[1]] = paramFlat2[indexes[0]:indexes[1]]
@@ -210,3 +215,46 @@ def average_weight_and_bias(population, env):
     avg_network.intercepts_ = [intercept0, intercept1]
 
     return avg_network
+
+
+def partial_fit(best_trained, best_network, env):
+    """Partial fit neural netowork to actions of best agent.
+
+    Author: Bjørn Christian Weinbach
+
+    Args:
+        best_trained (MLPClassifier): [Neural network to be trained]
+        best_network (MLPClassifier): [Neural network that scored high]
+        env (OpenAI gym): [Environment]
+
+    Returns:
+        [best_trained]: [partially fitted neural netork]
+    """
+    observation = env.reset()
+    score = 0
+    actions = np.empty(5)
+    trainingx = []
+    trainingy = []
+    actions
+    terminate = False
+
+    while not(terminate):
+        j = 0
+        action = int(best_network.predict(
+            observation.reshape(1, -1).reshape(1, -1)))
+        if j > 5 and sum(actions) % 5 == 0:
+            action = env.action_space.sample()
+        observation, reward, done, _ = env.step(action)
+        trainingx.append(observation)
+        trainingy.append(action)
+        score += reward
+        j += 1
+        actions[j % 5] = action
+        terminate = done
+
+    best_trained.fit(
+        trainingx,
+        trainingy
+    )
+
+    return best_trained
