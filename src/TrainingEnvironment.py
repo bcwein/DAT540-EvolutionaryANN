@@ -100,13 +100,12 @@ for i in range(generations):
     listOfAverageScores.append(np.average(fit))
     listOfBestScores.append(current_best_score)
 
-functions.show_simulation(best_network, env)
 # Render of best, average and trained network
 # functions.show_simulation(best_network, env)
 # functions.show_simulation(avgAgent, env)
 # functions.show_simulation(best_trained, env)
 
-
+# Plotting only works if the agents fail to reach the goal
 functions.nnPerformance(generations, listOfBestScores, listOfAverageScores)
 
 env.close()
