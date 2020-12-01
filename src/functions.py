@@ -57,13 +57,6 @@ def initialise_population(size, env):
         population.append(create_new_network(env))
     return population
 
-# def select_mutation_method(agent, method, mutation_rate):
-#     if(method=='swap'):
-#         mutationFunc_W_B(agent, mutation_rate)
-#     elif(method=='scramble'):
-
-#     elif(method=='inverse'):
-
 
 def mutationFunc_W_B(agent, mutation_rate, method):
     """Mutate agents weights and biases.
@@ -121,7 +114,9 @@ def breedCrossover(nn1, nn2):
     Returns:
         [children]: [List of two children containing coefs_ and intercepts_]
     """
+    # Choosing either input -> hidden-layer or hidden-layer -> output
     layer = random.randint(0, 1)
+    # layer = 1
 
     child1 = []
     child2 = []
