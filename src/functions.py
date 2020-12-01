@@ -4,6 +4,10 @@ Python helper functions for training agents.
 Functions:
     create_new_network - Create new MLP Classifier.
     initialise_population -  Initalises a population of agents
+    mutationFunc_W_B -  mutate both weights and biases for an agent
+    breedCrossover - Breeds a child from 2 parents using crossover
+    show_simulation - Display a simulation of a single given network
+    average_weight_and_bias - Calculate the average weight and bias
 """
 
 from sklearn.neural_network import MLPClassifier
@@ -91,7 +95,7 @@ def mutationFunc_W_B(agent, mutation_rate):
 
 
 def breedCrossover(nn1, nn2):
-    """[Breeds a child from 2 parents using crossover].
+    """Breeds a child from 2 parents using crossover.
 
     Author: Håvard Godal
 
