@@ -52,10 +52,13 @@ for i in range(generations):
     avgAgents.append(avgAgent)
 
     # Breed new nn's
+    for j in range(0, int(population_size/2), 2):
+        children = functions.breedCrossover(parent1, parent2)
+        for k in range(2):
+            population[j].coefs_ = children[k][0]
+            population[j].intercepts_ = children[k][1]
+
     for j in range(population_size):
-        newCoef, newInter = functions.breedCrossover(parent1, parent2)
-        population[j].coefs_ = newCoef
-        population[j].intercepts_ = newInter
         population[j] = functions.mutationFunc_W_B(population[j],
                                                    mutation_rate, 
                                                    'swap')
