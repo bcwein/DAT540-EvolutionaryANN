@@ -299,12 +299,6 @@ def mutation_rate(score, goal):
 
     Args:
         score (float): [score of best agent]
+        goal (float): [Linear function decreasing as score -> goal]
     """
-    if score/goal > 0.8:
-        return(0.0001)
-    if score/goal > 0.4:
-        return(0.001)
-    elif score/goal > 0.2:
-        return(0.05)
-    elif score/goal >= 0:
-        return 0.1
+    return(1 - (score/goal))
