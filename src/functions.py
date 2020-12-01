@@ -36,8 +36,11 @@ def create_new_network(env):
                   classes=np.arange(env.action_space.n))
 
 
+
 def initialise_population(size, env):
     """[Initialise size number of agents].
+
+    Author: Bjørn Christian Weinbach
 
     Args:
         size ([int]): [Number of agents in population]
