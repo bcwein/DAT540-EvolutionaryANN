@@ -6,7 +6,7 @@ import functions
 import copy
 
 population_size = 50
-generations = 15
+generations = 25
 mutation_rate = 0.05  # 0.001
 avgAgents = []
 
@@ -23,6 +23,7 @@ for i in range(generations):
         score = 0
         actions = np.empty(5)
         terminate = False
+        print("[" + "="*(n + 1) + " "*(population_size - n - 1) + "]", end="\r")
         while not(terminate):
             j = 0
             action = int(agent.predict(
@@ -35,7 +36,6 @@ for i in range(generations):
             actions[j % 5] = action
             terminate = done
             terminate = True if score > 50000 else terminate  # Comment out if desired
-
         fit[n] = score
 
     score_probability = fit/sum(fit)
@@ -58,13 +58,14 @@ for i in range(generations):
         population[j] = functions.mutationFunc_W_B(population[j],
                                                    mutation_rate)
 
-        current_best_index = np.argmax(fit)
-        current_best_score = fit[current_best_index]
+    current_best_index = np.argmax(fit)
+    current_best_score = fit[current_best_index]
 
-        if(current_best_score > max_score):
-            max_score = current_best_score
-            best_network = population[current_best_index]
+    if(current_best_score > max_score):
+        max_score = current_best_score
+        best_network = population[current_best_index]
 
+    print(" " * (population_size + 2), end="\r")
     print(f'Gen {i+1}: Average: {np.average(fit)} | Best: {current_best_score}')
 
 # Network based on average weight and bias over all levels
