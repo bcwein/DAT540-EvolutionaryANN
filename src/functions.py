@@ -9,6 +9,7 @@ from sklearn.neural_network import MLPClassifier
 import numpy as np
 import random
 import copy
+import matplotlib.pyplot as plt
 
 
 def create_new_network(env):
@@ -85,7 +86,7 @@ def mutationFunc_W_B(agent, mutation_rate):
     return agent
 
 
-def mutationFunc_W_B(agent, mutation_rate):
+##def mutationFunc_W_B(agent, mutation_rate):
     """Mutate agents weights and biases.
 
     Args:
@@ -222,3 +223,23 @@ def average_weight_and_bias(population, env):
     average_network.intercepts_ = average_bias
 
     return average_network
+
+def nnPerformance(generation,best_score,average_score):
+    """Visualize the performance from each generation.
+
+    Author: Vegard Rongve
+
+    Args:
+        generation: generation size
+        best_score: list with best scores from each generation
+        average_score: list with average scores from each generation
+
+    Returns:Plot
+    """
+    plt.plot(list(range(generation)),best_score,label="Max score")
+    plt.plot(list(range(generation)),average_score,label="Average score")
+    plt.legend()
+    plt.title('Fitness through the generations')
+    plt.xlabel("Generations")
+    plt.ylabel("Fitness")
+    plt.show()

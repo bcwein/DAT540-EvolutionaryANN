@@ -6,12 +6,15 @@ import functions
 import copy
 import random
 
-population_size = 50
-generations = 5  # 15
-mutation_rate = 0.01
+population_size = 60
+generations = 10  # 15
+mutation_rate = 0.05
 
 env = gym.make('CartPole-v1')
-env._max_episode_steps = np.inf
+env._max_episode_steps = 10000
+
+listOfAverageScores = []
+listOfBestScores = []
 
 population = functions.initialise_population(population_size, env)
 fit = np.zeros(population_size)
@@ -60,10 +63,15 @@ for i in range(generations):
 
     print(f'Gen {i}: Average: {np.average(fit)} | Best: {current_best_score}')
 
+    listOfAverageScores.append(np.average(fit))
+    listOfBestScores.append(current_best_score)
+
 functions.show_simulation(best_network, env)
 
 # Network based on average weight and bias over all levels
 average_network = functions.average_weight_and_bias(population, env)
 functions.show_simulation(average_network, env)
+
+functions.nnPerformance(generations,listOfBestScores,listOfAverageScores)
 
 env.close()
