@@ -70,6 +70,7 @@ def mutationFunc_W_B(agent, mutation_rate, method):
     Args:
         agent ([MLPClassifier]): [Neural Network of agent]
         mutation_rate ([float]): [Probability of mutation]
+        method ([ "swap" | "inverse" | "scramble" ]): [Type of mutation operation]
 
     Returns:
         [agent]: [Mutated agent]    
@@ -177,29 +178,28 @@ def show_simulation(network, env):
     return score
 
 
-def average_weight_and_bias(population):
+def average_weight_and_bias(population, env):
     """Calculate the average weight and bias from a given population.
-
+    
     Author: Ove Jørgensen
 
     Args:
         population: The population from which to calculate
 
     Returns:
-        [coefs]: The average weights of the populaiton
-        [intercepts]: The average biases of the population
+        [avg_network]: A new network given the average bias and weight
     """
-    coef0 = np.mean(np.array([coef.coefs_[0] for coef in population]), axis=0)
-    coef1 = np.mean(np.array([coef.coefs_[1] for coef in population]), axis=0)
-
-    intercept0 = np.mean(
-        np.array([intercept.intercepts_[0] for intercept in population]),
+    find_mean = lambda mat, attr_type, i: np.mean(
+        np.array([getattr(el, attr_type)[i] for el in mat]),
         axis=0
-    )
+    ) 
+    coef0 = find_mean(population, 'coefs_', 0)
+    coef1 = find_mean(population, 'coefs_', 1)
+    intercept0 = find_mean(population, 'intercepts_', 0)
+    intercept1 = find_mean(population, 'intercepts_', 1)
 
-    intercept1 = np.mean(
-        np.array([intercept.intercepts_[1] for intercept in population]),
-        axis=0
-    )
+    avg_network = create_new_network(env)
+    avg_network.coefs_ = [coef0, coef1]
+    avg_network.intercepts_ = [intercept0, intercept1]
 
-    return [coef0, coef1], [intercept0, intercept1]
+    return avg_network

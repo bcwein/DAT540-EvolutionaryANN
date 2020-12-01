@@ -48,10 +48,7 @@ for i in range(generations):
     parent1 = copy.copy(population[parents_index[0]])
     parent2 = copy.copy(population[parents_index[1]])
 
-    avgCoefs, avgIntercepts = functions.average_weight_and_bias(population)
-    avgAgent = functions.create_new_network(env)
-    avgAgent.coefs_ = avgCoefs
-    avgAgent.intercepts_ = avgIntercepts
+    avgAgent = functions.average_weight_and_bias(population, env)
     avgAgents.append(avgAgent)
 
     # Breed new nn's
@@ -77,10 +74,7 @@ for i in range(generations):
     )
 
 # Network based on average weight and bias over all levels
-avgCoef, avgIntercept = functions.average_weight_and_bias(avgAgents)
-avgAgent = functions.create_new_network(env)
-avgAgent.coefs_ = avgCoef
-avgAgent.intercepts_ = avgIntercept
+avgAgent = functions.average_weight_and_bias(avgAgents, env)
 
 # Render of best and average network
 # functions.show_simulation(best_network, env)
