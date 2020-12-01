@@ -2,6 +2,7 @@
 Python helper functions for training agents.
 
 Functions:
+    create_new_network - Create new MLP Classifier.
     initialise_population -  Initalises a population of agents
 """
 
@@ -13,6 +14,8 @@ import copy
 
 def create_new_network(env):
     """Create a new MLPCLassifier.
+
+    Author: Bjørn Christian Weinbach, Marius Sørensen
 
     Args:
         env: The environment to get training samples from
@@ -35,7 +38,9 @@ def create_new_network(env):
 
 
 def initialise_population(size, env):
-    """[Initialise size number of agents].
+    """Initialise size number of agents.
+
+    Author: Bjørn Christian Weinbach
 
     Args:
         size ([int]): [Number of agents in population]
@@ -67,7 +72,7 @@ def mutationFunc_W_B(agent, mutation_rate, method):
         mutation_rate ([float]): [Probability of mutation]
 
     Returns:
-        [type]: [description]
+        [agent]: [Mutated agent]    
     """
     for item in range(2):
         if item == 0:
@@ -98,8 +103,10 @@ def mutationFunc_W_B(agent, mutation_rate, method):
     return agent
 
 
-def breedCrossover(nn2, nn1):
+def breedCrossover(nn1, nn2):
     """[Breeds a child from 2 parents using crossover].
+
+    Author: Håvard Godal
 
     Args:
         nn1 ([MLPClassifier]): [Neural network parent nr 1]
@@ -123,7 +130,7 @@ def breedCrossover(nn2, nn1):
     newCoefs.insert(layer, np.array(coefFlat2).reshape(shape))
     newCoefs.insert(1 - layer, nn2.coefs_[1 - layer])
 
-    ###########################################################################
+    ###################################################################
 
     shape = nn2.intercepts_[layer].shape
 
@@ -145,6 +152,8 @@ def breedCrossover(nn2, nn1):
 def show_simulation(network, env):
     """Display a simulation of a single given network in a given environment.
 
+    Author: Marius Sørensen
+
     Args:
         network (MLPClassifier): The network to use for simulation
         env (TimeLimit): An OpenAI gym environment in which to
@@ -160,7 +169,7 @@ def show_simulation(network, env):
             observation.reshape(1, -1).reshape(1, -1)))
         if j > 5 and sum(actions) % 5 == 0:
             action = env.action_space.sample()
-        observation, reward, terminate, info = env.step(action)
+        observation, reward, terminate, _ = env.step(action)
         score += reward
         j += 1
         actions[j % 5] = action
@@ -168,19 +177,20 @@ def show_simulation(network, env):
     return score
 
 
-def average_weight_and_bias(population, env):
+def average_weight_and_bias(population):
     """Calculate the average weight and bias from a given population.
+
+    Author: Ove Jørgensen
 
     Args:
         population: The population from which to calculate
-        env: The environment to get training samples from
 
     Returns:
-        average_network: A new NN created using the MLPClassifier
+        [coefs]: The average weights of the populaiton
+        [intercepts]: The average biases of the population
     """
     coef0 = np.mean(np.array([coef.coefs_[0] for coef in population]), axis=0)
     coef1 = np.mean(np.array([coef.coefs_[1] for coef in population]), axis=0)
-    average_weight = [coef0, coef1]
 
     intercept0 = np.mean(
         np.array([intercept.intercepts_[0] for intercept in population]),
@@ -192,11 +202,4 @@ def average_weight_and_bias(population, env):
         axis=0
     )
 
-    average_bias = [intercept0, intercept1]
-
-    # Create new network with the averages
-    average_network = create_new_network(env)
-    average_network.coefs_ = average_weight
-    average_network.intercepts_ = average_bias
-
-    return average_network
+    return [coef0, coef1], [intercept0, intercept1]
