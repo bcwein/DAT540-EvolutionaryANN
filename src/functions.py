@@ -220,6 +220,8 @@ def average_weight_and_bias(population, env):
 def partial_fit(best_trained, best_network, env):
     """Partial fit neural netowork to actions of best agent.
 
+    Author: Bjørn Christian Weinbach
+
     Args:
         best_trained (MLPClassifier): [Neural network to be trained]
         best_network (MLPClassifier): [Neural network that scored high]
