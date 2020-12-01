@@ -12,7 +12,7 @@ global_best_score = 0
 scoreList = np.zeros(100)
 
 env = gym.make('CartPole-v1')
-env._max_episode_steps = 5000
+env._max_episode_steps = 500
 acceptance_rate = 0.95
 
 listOfAverageScores = []
@@ -58,8 +58,6 @@ for i in range(generations):
 
         listOfAverageScores.append(np.average(fit))
         listOfBestScores.append(current_best_score)
-        functions.nnPerformance(len(listOfBestScores),
-                                listOfBestScores, listOfAverageScores)
         break
 
     score_probability = fit/sum(fit)
@@ -113,7 +111,6 @@ for i in range(generations):
 # functions.show_simulation(avgAgent, env)
 # functions.show_simulation(best_trained, env)
 
-# Plotting only works if the agents fail to reach the goal
 functions.nnPerformance(len(listOfBestScores),
                         listOfBestScores, listOfAverageScores)
 
