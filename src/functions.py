@@ -66,16 +66,17 @@ def mutationFunc_W_B(agent, mutation_rate):
         else:
             node_item = agent.intercepts_
 
-        for i in range(len(node_item)):
-            for swappedRow in range(len(node_item[i])):
+        for el in node_item:
+            for swappedRow in el:
                 if (random.random() < mutation_rate):
-                    rowToSwapWith = int(random.random()*len(node_item[i]))
-                    row1 = copy.copy(node_item[i][swappedRow])
+                    rowToSwapWith = int(random.random()*len(el))
+
+                    row1 = copy.copy(el[swappedRow])
                     # print(row1)
-                    row2 = copy.copy(node_item[i][rowToSwapWith])
+                    row2 = copy.copy(el[rowToSwapWith])
                     # print(row2)
-                    node_item[i][swappedRow] = row2
-                    node_item[i][rowToSwapWith] = row1
+                    el[swappedRow] = row2
+                    el[rowToSwapWith] = row1
 
         if item == 0:
             agent.coefs_ = node_item
@@ -84,9 +85,19 @@ def mutationFunc_W_B(agent, mutation_rate):
 
     return agent
 
+# def select_mutation_method(agent, method, mutation_rate):
+#     if(method=='swap'):
+#         mutationFunc_W_B(agent, mutation_rate)
+#     elif(method=='scramble'):
 
-def mutationFunc_W_B(agent, mutation_rate):
+#     elif(method=='inverse'):
+
+
+def mutationFunc_W_B(agent, mutation_rate, method):
     """Mutate agents weights and biases.
+
+    Author:
+        Vegard Rongve, Johanna Kinstad, Ove Jørgensen
 
     Args:
         agent ([MLPClassifier]): [Neural Network of agent]
@@ -99,23 +110,27 @@ def mutationFunc_W_B(agent, mutation_rate):
         if item == 0:
             node_item = agent.coefs_
         else:
-            node_item = agent.intercepts_
+            node_item = copy.copy(agent.intercepts_)
 
-        for i in range(len(node_item)):
-            for swappedRow in range(len(node_item[i])):
+        for el in node_item:
+            for swappedRow in el:
                 if (random.random() < mutation_rate):
-                    rowToSwapWith = int(random.random()*len(node_item[i]))
-                    row1 = copy.copy(node_item[i][swappedRow])
-                    # print(row1)
-                    row2 = copy.copy(node_item[i][rowToSwapWith])
-                    # print(row2)
-                    node_item[i][swappedRow] = row2
-                    node_item[i][rowToSwapWith] = row1
+                    random1 = int(random.random()*len(el))
+                    random2 = int(random.random()*len(el))
+                    if(random1>random2):
+                        random2, random1 = random1, random2
+                    
+                    if(method=='swap'):
+                        row1 = copy.copy(swappedRow)
+                        row2 = copy.copy(el[random1])
+                        swappedRow = row2
+                        el[random1] = row1
 
-        if item == 0:
-            agent.coefs_ = node_item
-        else:
-            agent.intercepts_ = node_item
+                    elif(method=='scramble'):
+                        random.shuffle(el[random1:random2])
+
+                    elif(method=='inverse'):
+                        el[random1:random2] = el[random1:random2][::-1]
 
     return agent
 

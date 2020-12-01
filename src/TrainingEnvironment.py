@@ -6,9 +6,9 @@ import functions
 import copy
 import random
 
-population_size = 50
-generations = 5  # 15
-mutation_rate = 0.01
+population_size = 100
+generations = 15
+mutation_rate = 1
 
 env = gym.make('CartPole-v1')
 env._max_episode_steps = np.inf
@@ -49,7 +49,8 @@ for i in range(generations):
         population[j].coefs_ = newCoef
         population[j].intercepts_ = newInter
         population[j] = functions.mutationFunc_W_B(population[j],
-                                                   mutation_rate)
+                                                   mutation_rate, 
+                                                   'swap')
 
         current_best_index = np.argmax(fit)
         current_best_score = fit[current_best_index]
