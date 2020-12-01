@@ -82,17 +82,9 @@ for i in range(generations):
             population[j+k].intercepts_ = children[k][1]
 
     for j in range(population_size):
-<<<<<<< HEAD
-        population[j] = functions.mutationFunc_W_B(
-            population[j],
-            functions.mutation_rate(current_best_score),
-            'swap'
-        )
-=======
         population[j] = functions.mutationFunc_W_B(population[j],
                                                    mutation_rate,
                                                    'uniform')
->>>>>>> 0596c14968aef8d296c9fca31265b17c5c1a5e43
 
     print(" " * (population_size + 2), end="\r")
     print(
