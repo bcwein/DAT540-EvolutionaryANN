@@ -74,10 +74,11 @@ def mutationFunc_W_B(agent, mutation_rate, method):
     Args:
         agent ([MLPClassifier]): [Neural Network of agent]
         mutation_rate ([float]): [Probability of mutation]
-        method ([ "swap" | "inverse" | "scramble" ]): [Type of mutation operation]
+        method ([ "swap" | "inverse" | "scramble" ]):
+            [Type of mutation operation]
 
     Returns:
-        [agent]: [Mutated agent]    
+        [agent]: [Mutated agent]
     """
     for item in range(2):
         if item == 0:
@@ -90,19 +91,19 @@ def mutationFunc_W_B(agent, mutation_rate, method):
                 if (random.random() < mutation_rate):
                     random1 = int(random.random()*len(el))
                     random2 = int(random.random()*len(el))
-                    if(random1>random2):
+                    if(random1 > random2):
                         random2, random1 = random1, random2
-                    
-                    if(method=='swap'):
+
+                    if(method == 'swap'):
                         row1 = copy.copy(swappedRow)
                         row2 = copy.copy(el[random1])
                         swappedRow = row2
                         el[random1] = row1
 
-                    elif(method=='scramble'):
+                    elif(method == 'scramble'):
                         random.shuffle(el[random1:random2])
 
-                    elif(method=='inverse'):
+                    elif(method == 'inverse'):
                         el[random1:random2] = el[random1:random2][::-1]
 
     return agent
@@ -152,7 +153,7 @@ def breedCrossover(nn1, nn2):
 
         child1.append(newParam)
 
-        ##########################################################################
+        #######################################################################
 
         newFlatParam = copy.copy(paramFlat1)
         newFlatParam[indexes[0]:indexes[1]] = paramFlat2[indexes[0]:indexes[1]]
@@ -196,7 +197,7 @@ def show_simulation(network, env):
 
 def average_weight_and_bias(population, env):
     """Calculate the average weight and bias from a given population.
-    
+
     Author: Ove Jørgensen
 
     Args:
@@ -205,10 +206,10 @@ def average_weight_and_bias(population, env):
     Returns:
         [avg_network]: A new network given the average bias and weight
     """
-    find_mean = lambda mat, attr_type, i: np.mean(
+    def find_mean(mat, attr_type, i): return np.mean(
         np.array([getattr(el, attr_type)[i] for el in mat]),
         axis=0
-    ) 
+    )
     coef0 = find_mean(population, 'coefs_', 0)
     coef1 = find_mean(population, 'coefs_', 1)
     intercept0 = find_mean(population, 'intercepts_', 0)
