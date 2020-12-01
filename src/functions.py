@@ -2,6 +2,7 @@
 Python helper functions for training agents.
 
 Functions:
+    create_new_network - Create new MLP Classifier.
     initialise_population -  Initalises a population of agents
 """
 
@@ -36,9 +37,8 @@ def create_new_network(env):
                   classes=np.arange(env.action_space.n))
 
 
-
 def initialise_population(size, env):
-    """[Initialise size number of agents].
+    """Initialise size number of agents.
 
     Author: Bjørn Christian Weinbach
 
@@ -57,6 +57,8 @@ def initialise_population(size, env):
 # Created a mutation function to mutate both weights and biases for an agent
 def mutationFunc_W_B(agent, mutation_rate):
     """Mutation function to mutate both weights and biases for an agent.
+
+    Author: Vegard Rongve
 
     Args:
         agent ([MLPClassifier]): [Neural network of agent]
@@ -90,6 +92,8 @@ def mutationFunc_W_B(agent, mutation_rate):
 
 def breedCrossover(nn1, nn2):
     """[Breeds a child from 2 parents using crossover].
+
+    Author: Håvard Godal
 
     Args:
         nn1 ([MLPClassifier]): [Neural network parent nr 1]
@@ -162,6 +166,8 @@ def show_simulation(network, env):
 
 def average_weight_and_bias(population):
     """Calculate the average weight and bias from a given population.
+
+    Author: Ove Jørgensen
 
     Args:
         population: The population from which to calculate
