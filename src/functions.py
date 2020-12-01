@@ -2,7 +2,12 @@
 Python helper functions for training agents.
 
 Functions:
+    create_new_network - Create new MLP Classifier.
     initialise_population -  Initalises a population of agents
+    mutationFunc_W_B -  mutate both weights and biases for an agent
+    breedCrossover - Breeds a child from 2 parents using crossover
+    show_simulation - Display a simulation of a single given network
+    average_weight_and_bias - Calculate the average weight and bias
 """
 
 from sklearn.neural_network import MLPClassifier
@@ -14,6 +19,8 @@ import matplotlib.pyplot as plt
 
 def create_new_network(env):
     """Create a new MLPCLassifier.
+
+    Author: Bjørn Christian Weinbach, Marius Sørensen
 
     Args:
         env: The environment to get training samples from
@@ -36,7 +43,9 @@ def create_new_network(env):
 
 
 def initialise_population(size, env):
-    """[Initialise size number of agents].
+    """Initialise size number of agents.
+
+    Author: Bjørn Christian Weinbach
 
     Args:
         size ([int]): [Number of agents in population]
@@ -50,13 +59,17 @@ def initialise_population(size, env):
     return population
 
 
-# Created a mutation function to mutate both weights and biases for an agent
-def mutationFunc_W_B(agent, mutation_rate):
-    """Mutation function to mutate both weights and biases for an agent.
+def mutationFunc_W_B(agent, mutation_rate, method):
+    """Mutate agents weights and biases.
+
+    Author:
+        Vegard Rongve, Johanna Kinstad, Ove Jørgensen
 
     Args:
-        agent ([MLPClassifier]): [Neural network of agent]
-        mutation_rate ([float]): [probability of mutation]
+        agent ([MLPClassifier]): [Neural Network of agent]
+        mutation_rate ([float]): [Probability of mutation]
+        method ([ "swap" | "inverse" | "scramble" ]):
+            [Type of mutation operation]
 
     Returns:
         [agent]: [Mutated agent]
@@ -65,108 +78,99 @@ def mutationFunc_W_B(agent, mutation_rate):
         if item == 0:
             node_item = agent.coefs_
         else:
-            node_item = agent.intercepts_
+            node_item = copy.copy(agent.intercepts_)
 
-        for i in range(len(node_item)):
-            for swappedRow in range(len(node_item[i])):
+        for el in node_item:
+            for swappedRow in el:
                 if (random.random() < mutation_rate):
-                    rowToSwapWith = int(random.random()*len(node_item[i]))
-                    row1 = copy.copy(node_item[i][swappedRow])
-                    # print(row1)
-                    row2 = copy.copy(node_item[i][rowToSwapWith])
-                    # print(row2)
-                    node_item[i][swappedRow] = row2
-                    node_item[i][rowToSwapWith] = row1
+                    random1 = int(random.random()*len(el))
+                    random2 = int(random.random()*len(el))
+                    if(random1 > random2):
+                        random2, random1 = random1, random2
 
-        if item == 0:
-            agent.coefs_ = node_item
-        else:
-            agent.intercepts_ = node_item
+                    if(method == 'swap'):
+                        row1 = copy.copy(swappedRow)
+                        row2 = copy.copy(el[random1])
+                        swappedRow = row2
+                        el[random1] = row1
+
+                    elif(method == 'scramble'):
+                        random.shuffle(el[random1:random2])
+
+                    elif(method == 'inverse'):
+                        el[random1:random2] = el[random1:random2][::-1]
+
+                    elif(method == 'uniform'):
+                        randVal = random.random()
+                        el[random1] = randVal
 
     return agent
 
 
-##def mutationFunc_W_B(agent, mutation_rate):
-    """Mutate agents weights and biases.
+def breedCrossover(nn1, nn2):
+    """Breeds a child from 2 parents using crossover.
 
-    Args:
-        agent ([MLPClassifier]): [Neural Network of agent]
-        mutation_rate ([float]): [Probability of mutation]
-
-    Returns:
-        [type]: [description]
-    """
-    for item in range(2):
-        if item == 0:
-            node_item = agent.coefs_
-        else:
-            node_item = agent.intercepts_
-
-        for i in range(len(node_item)):
-            for swappedRow in range(len(node_item[i])):
-                if (random.random() < mutation_rate):
-                    rowToSwapWith = int(random.random()*len(node_item[i]))
-                    row1 = copy.copy(node_item[i][swappedRow])
-                    # print(row1)
-                    row2 = copy.copy(node_item[i][rowToSwapWith])
-                    # print(row2)
-                    node_item[i][swappedRow] = row2
-                    node_item[i][rowToSwapWith] = row1
-
-        if item == 0:
-            agent.coefs_ = node_item
-        else:
-            agent.intercepts_ = node_item
-
-    return agent
-
-
-def breedCrossover(nn2, nn1):
-    """[Breeds a child from 2 parents using crossover].
+    Author: Håvard Godal
 
     Args:
         nn1 ([MLPClassifier]): [Neural network parent nr 1]
         nn2 ([MLPClassifier]): [Neural network parent nr 2]
 
     Returns:
-        [newcoef, newinter]: [List of coefs_ and intercepts_]
+        [children]: [List of two children containing coefs_ and intercepts_]
     """
+    # Choosing either input -> hidden-layer or hidden-layer -> output
     layer = random.randint(0, 1)
-    shape = nn2.coefs_[layer].shape
+    # layer = 1
 
-    coefFlat1 = np.ravel(nn1.coefs_[layer])
-    coefFlat2 = np.ravel(nn2.coefs_[layer])
+    child1 = []
+    child2 = []
 
-    indexes = sorted([int(random.random() * len(coefFlat1)),
-                      int(random.random() * len(coefFlat1))])
+    for i in range(2):
+        if i == 0:
+            param1 = nn1.coefs_
+            param2 = nn2.coefs_
+        else:
+            param1 = nn1.intercepts_
+            param2 = nn2.intercepts_
 
-    coefFlat2[indexes[0]:indexes[1]] = coefFlat1[indexes[0]:indexes[1]]
+        shape = param2[layer].shape
 
-    newCoefs = []
-    newCoefs.insert(layer, np.array(coefFlat2).reshape(shape))
-    newCoefs.insert(1 - layer, nn2.coefs_[1 - layer])
+        paramFlat1 = np.ravel(param1[layer])
+        paramFlat2 = np.ravel(param2[layer])
 
-    ###########################################################################
+        indexes = sorted([int(random.random() * len(paramFlat1)),
+                          int(random.random() * len(paramFlat1))])
 
-    shape = nn2.intercepts_[layer].shape
+        # Should consider combining the code chunks beneath into one
 
-    interFlat1 = np.ravel(nn1.intercepts_[layer])
-    interFlat2 = np.ravel(nn2.intercepts_[layer])
+        newFlatParam = copy.copy(paramFlat2)
+        newFlatParam[indexes[0]:indexes[1]] = paramFlat1[indexes[0]:indexes[1]]
 
-    indexes = sorted([int(random.random() * len(coefFlat1)),
-                      int(random.random() * len(coefFlat1))])
+        newParam = []
+        newParam.insert(layer, np.array(newFlatParam).reshape(shape))
+        newParam.insert(1 - layer, param2[1 - layer])
 
-    interFlat2[indexes[0]:indexes[1]] = interFlat1[indexes[0]:indexes[1]]
+        child1.append(newParam)
 
-    newInters = []
-    newInters.insert(layer, np.array(interFlat2).reshape(shape))
-    newInters.insert(1 - layer, nn2.intercepts_[1 - layer])
+        #######################################################################
 
-    return newCoefs, newInters
+        newFlatParam = copy.copy(paramFlat1)
+        newFlatParam[indexes[0]:indexes[1]] = paramFlat2[indexes[0]:indexes[1]]
+
+        newParam = []
+        newParam.insert(layer, np.array(newFlatParam).reshape(shape))
+        newParam.insert(1 - layer, param1[1 - layer])
+
+        child2.append(newParam)
+
+    return [child1, child2]
 
 
 def show_simulation(network, env):
     """Display a simulation of a single given network in a given environment.
+
+    Author: Marius Sørensen
 
     Args:
         network (MLPClassifier): The network to use for simulation
@@ -183,7 +187,7 @@ def show_simulation(network, env):
             observation.reshape(1, -1).reshape(1, -1)))
         if j > 5 and sum(actions) % 5 == 0:
             action = env.action_space.sample()
-        observation, reward, terminate, info = env.step(action)
+        observation, reward, terminate, _ = env.step(action)
         score += reward
         j += 1
         actions[j % 5] = action
@@ -194,37 +198,74 @@ def show_simulation(network, env):
 def average_weight_and_bias(population, env):
     """Calculate the average weight and bias from a given population.
 
+    Author: Ove Jørgensen
+
     Args:
         population: The population from which to calculate
-        env: The environment to get training samples from
 
     Returns:
-        average_network: A new NN created using the MLPClassifier
+        [avg_network]: A new network given the average bias and weight
     """
-    coef0 = np.mean(np.array([coef.coefs_[0] for coef in population]), axis=0)
-    coef1 = np.mean(np.array([coef.coefs_[1] for coef in population]), axis=0)
-    average_weight = [coef0, coef1]
-
-    intercept0 = np.mean(
-        np.array([intercept.intercepts_[0] for intercept in population]),
+    def find_mean(mat, attr_type, i): return np.mean(
+        np.array([getattr(el, attr_type)[i] for el in mat]),
         axis=0
     )
+    coef0 = find_mean(population, 'coefs_', 0)
+    coef1 = find_mean(population, 'coefs_', 1)
+    intercept0 = find_mean(population, 'intercepts_', 0)
+    intercept1 = find_mean(population, 'intercepts_', 1)
 
-    intercept1 = np.mean(
-        np.array([intercept.intercepts_[1] for intercept in population]),
-        axis=0
+    avg_network = create_new_network(env)
+    avg_network.coefs_ = [coef0, coef1]
+    avg_network.intercepts_ = [intercept0, intercept1]
+
+    return avg_network
+
+
+def partial_fit(best_trained, best_network, env):
+    """Partial fit neural netowork to actions of best agent.
+
+    Author: Bjørn Christian Weinbach
+
+    Args:
+        best_trained (MLPClassifier): [Neural network to be trained]
+        best_network (MLPClassifier): [Neural network that scored high]
+        env (OpenAI gym): [Environment]
+
+    Returns:
+        [best_trained]: [partially fitted neural netork]
+    """
+    observation = env.reset()
+    score = 0
+    actions = np.empty(5)
+    trainingx = []
+    trainingy = []
+    actions
+    terminate = False
+
+    while not(terminate):
+        j = 0
+        action = int(best_network.predict(
+            observation.reshape(1, -1).reshape(1, -1)))
+        if j > 5 and sum(actions) % 5 == 0:
+            action = env.action_space.sample()
+        observation, reward, done, _ = env.step(action)
+        trainingx.append(observation)
+        trainingy.append(action)
+        score += reward
+        j += 1
+        actions[j % 5] = action
+        terminate = done
+
+    best_trained.partial_fit(
+        trainingx,
+        trainingy
     )
 
-    average_bias = [intercept0, intercept1]
+    return best_trained
 
-    # Create new network with the averages
-    average_network = create_new_network(env)
-    average_network.coefs_ = average_weight
-    average_network.intercepts_ = average_bias
 
-    return average_network
-
-def nnPerformance(generation,best_score,average_score):
+def nnPerformance(generation, best_score, average_score):
     """Visualize the performance from each generation.
 
     Author: Vegard Rongve
@@ -236,8 +277,8 @@ def nnPerformance(generation,best_score,average_score):
 
     Returns:Plot
     """
-    plt.plot(list(range(generation)),best_score,label="Max score")
-    plt.plot(list(range(generation)),average_score,label="Average score")
+    plt.plot(list(range(generation)), best_score, label="Max score")
+    plt.plot(list(range(generation)), average_score, label="Average score")
     plt.legend()
     plt.title('Fitness through the generations')
     plt.xlabel("Generations")

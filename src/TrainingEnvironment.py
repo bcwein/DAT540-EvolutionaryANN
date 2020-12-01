@@ -4,17 +4,22 @@ import gym
 import numpy as np
 import functions
 import copy
-import random
 
-population_size = 60
-generations = 10  # 15
-mutation_rate = 0.05
+population_size = 50
+generations = 15
+mutation_rate = 0.001
+avgAgents = []
+global_best_score = 0
+scoreList = np.zeros(100)
 
 env = gym.make('CartPole-v1')
-env._max_episode_steps = 10000
+env._max_episode_steps = 500
 
 listOfAverageScores = []
 listOfBestScores = []
+
+# Trained agent
+best_trained = functions.create_new_network(env)
 
 population = functions.initialise_population(population_size, env)
 fit = np.zeros(population_size)
@@ -26,19 +31,31 @@ for i in range(generations):
         score = 0
         actions = np.empty(5)
         terminate = False
+        print(
+            "[" + "="*(n + 1) + " "*(population_size - n - 1) + "]", end="\r"
+        )
         while not(terminate):
             j = 0
             action = int(agent.predict(
                 observation.reshape(1, -1).reshape(1, -1)))
             if j > 5 and sum(actions) % 5 == 0:
                 action = env.action_space.sample()
-            observation, reward, done, info = env.step(action)
+            observation, reward, done, _ = env.step(action)
             score += reward
             j += 1
             actions[j % 5] = action
             terminate = done
-
         fit[n] = score
+
+        scoreList[(population_size*i+n) % 100] = score
+    if np.mean(scoreList) >= 475:
+        print(" " * (population_size + 2), end="\r")
+        print(f"\nSuccess in generation {i+1}!")
+        print(f"Current average score: {np.mean(scoreList)}")
+        np.set_printoptions(suppress=True)
+        # print(scoreList)
+        functions.show_simulation(population[parents_index[0]], env)
+        break
 
     score_probability = fit/sum(fit)
     parents_index = np.argsort(-score_probability)[:2]
@@ -46,31 +63,49 @@ for i in range(generations):
     parent1 = copy.copy(population[parents_index[0]])
     parent2 = copy.copy(population[parents_index[1]])
 
+    avgAgent = functions.average_weight_and_bias(population, env)
+    avgAgents.append(avgAgent)
+
+    current_best_index = np.argmax(fit)
+    current_best_score = fit[current_best_index]
+
+    # Store current global minimum
+    if(current_best_score >= max_score):
+        max_score = current_best_score
+        best_network = copy.copy(population[current_best_index])
+        best_trained = functions.partial_fit(best_trained,
+                                             best_network,
+                                             env)
+
     # Breed new nn's
+    for j in range(0, int(population_size), 2):
+        children = functions.breedCrossover(parent1, parent2)
+        for k in range(2):
+            population[j+k].coefs_ = children[k][0]
+            population[j+k].intercepts_ = children[k][1]
+
     for j in range(population_size):
-        newCoef, newInter = functions.breedCrossover(parent1, parent2)
-        population[j].coefs_ = newCoef
-        population[j].intercepts_ = newInter
         population[j] = functions.mutationFunc_W_B(population[j],
-                                                   mutation_rate)
+                                                   mutation_rate,
+                                                   'uniform')
 
-        current_best_index = np.argmax(fit)
-        current_best_score = fit[current_best_index]
+    print(" " * (population_size + 2), end="\r")
+    print(
+        f'Gen {i+1}: Average: {np.average(fit)} | Best: {current_best_score}'
+    )
 
-        if(current_best_score > max_score):
-            max_score = current_best_score
-            best_network = population[current_best_index]
-
-    print(f'Gen {i}: Average: {np.average(fit)} | Best: {current_best_score}')
+    # Network based on average weight and bias over all levels
+    # avgAgent = functions.average_weight_and_bias(avgAgents, env)
 
     listOfAverageScores.append(np.average(fit))
     listOfBestScores.append(current_best_score)
 
 functions.show_simulation(best_network, env)
+# Render of best, average and trained network
+# functions.show_simulation(best_network, env)
+# functions.show_simulation(avgAgent, env)
+# functions.show_simulation(best_trained, env)
 
-# Network based on average weight and bias over all levels
-average_network = functions.average_weight_and_bias(population, env)
-functions.show_simulation(average_network, env)
 
 functions.nnPerformance(generations,listOfBestScores,listOfAverageScores)
 
