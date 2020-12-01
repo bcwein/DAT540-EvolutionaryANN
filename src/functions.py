@@ -220,3 +220,44 @@ def average_weight_and_bias(population, env):
     avg_network.intercepts_ = [intercept0, intercept1]
 
     return avg_network
+
+
+def partial_fit(best_trained, best_network, env):
+    """Partial fit neural netowork to actions of best agent.
+
+    Args:
+        best_trained (MLPClassifier): [Neural network to be trained]
+        best_network (MLPClassifier): [Neural network that scored high]
+        env (OpenAI gym): [Environment]
+
+    Returns:
+        [best_trained]: [partially fitted neural netork]
+    """
+    observation = env.reset()
+    score = 0
+    actions = np.empty(5)
+    trainingx = []
+    trainingy = []
+    actions
+    terminate = False
+
+    while not(terminate):
+        j = 0
+        action = int(best_network.predict(
+            observation.reshape(1, -1).reshape(1, -1)))
+        if j > 5 and sum(actions) % 5 == 0:
+            action = env.action_space.sample()
+        observation, reward, done, _ = env.step(action)
+        trainingx.append(observation)
+        trainingy.append(action)
+        score += reward
+        j += 1
+        actions[j % 5] = action
+        terminate = done
+
+    best_trained.fit(
+        trainingx,
+        trainingy
+    )
+
+    return best_trained
