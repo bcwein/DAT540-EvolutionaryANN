@@ -258,3 +258,27 @@ def partial_fit(best_trained, best_network, env):
     )
 
     return best_trained
+
+
+def mutation_rate(score):
+    """Dynamic mutation rate.
+
+    Author: Bjørn Christian Weinbach
+
+    Algorithm:
+        High mutation rate in beginning -> explores space
+        When good agents are found:
+            Low mutation rate so new agents are similar to
+            previous ones (given that they have a high score)
+
+    Args:
+        score (float): [score of best agent]
+    """
+    if score > 4000:
+        return(0.0001)
+    if score > 2000:
+        return(0.001)
+    elif score > 1000:
+        return(0.05)
+    elif score > 0:
+        return 0.1
