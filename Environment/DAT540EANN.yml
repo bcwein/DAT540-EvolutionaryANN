@@ -7,5 +7,4 @@ dependencies:
   - pylint
   - pycodestyle
   - pydocstyle
-  - scikit-learn 
-  
+  - scikit-learn

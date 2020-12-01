@@ -98,6 +98,10 @@ def mutationFunc_W_B(agent, mutation_rate, method):
 
                     elif(method == 'inverse'):
                         el[random1:random2] = el[random1:random2][::-1]
+                    
+                    elif(method =='uniform'):
+                        randVal = random.random()
+                        el[random1] = randVal
 
     return agent
 
