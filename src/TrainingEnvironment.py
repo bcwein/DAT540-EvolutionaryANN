@@ -88,11 +88,11 @@ for i in range(generations):
             population[j+k].intercepts_ = children[k][1]
 
     for j in range(population_size):
-        population[j] = functions.mutationFunc_W_B(
-            population[j],
-            functions.mutation_rate(current_best_score,
-                                    env._max_episode_steps),
-            'swap'
+        population[j] = functions.mutationFunc_W_B( population[j],
+                                                    functions.mutation_rate(
+                                                        current_best_score,
+                                                        env._max_episode_steps),
+                                                    'swap'
         )
 
     print(" " * (population_size + 2), end="\r")

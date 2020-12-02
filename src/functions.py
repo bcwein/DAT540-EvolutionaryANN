@@ -69,7 +69,7 @@ def mutationFunc_W_B(agent, mutation_rate, method):
     Args:
         agent ([MLPClassifier]): [Neural Network of agent]
         mutation_rate ([float]): [Probability of mutation]
-        method ([ "swap" | "inverse" | "scramble" ]):
+        method ([ "swap" | "inverse" | "scramble" | "uniform" | "gaussian" ]):
             [Type of mutation operation]
 
     Returns:
@@ -79,7 +79,7 @@ def mutationFunc_W_B(agent, mutation_rate, method):
         if item == 0:
             node_item = agent.coefs_
         else:
-            node_item = copy.copy(agent.intercepts_)
+            node_item = agent.intercepts_
 
         for el in node_item:
             for swappedRow in el:
@@ -90,10 +90,7 @@ def mutationFunc_W_B(agent, mutation_rate, method):
                         random2, random1 = random1, random2
 
                     if(method == 'swap'):
-                        row1 = copy.copy(swappedRow)
-                        row2 = copy.copy(el[random1])
-                        swappedRow = row2
-                        el[random1] = row1
+                        swappedRow, el[random1] = el[random1], swappedRow
 
                     elif(method == 'scramble'):
                         random.shuffle(el[random1:random2])
@@ -101,10 +98,19 @@ def mutationFunc_W_B(agent, mutation_rate, method):
                     elif(method == 'inverse'):
                         el[random1:random2] = el[random1:random2][::-1]
 
-                    elif(method == 'uniform'):
-                        randVal = random.random()
-                        el[random1] = randVal
-
+                    else:
+                        if(type(swappedRow) == np.float64):
+                            if method == 'gaussian':
+                                swappedRow +=  np.random.normal(0, 2)
+                            elif method == 'uniform':
+                                swappedRow = random.random()
+                        else:
+                            for inner in swappedRow:
+                                if method == 'gaussian':
+                                    inner += np.random.normal(0, 2)
+                                elif method =='uniform':
+                                    inner = random.random()
+      
     return agent
 
 
