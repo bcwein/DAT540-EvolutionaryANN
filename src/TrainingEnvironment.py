@@ -112,6 +112,8 @@ for i in range(generations):
 # functions.show_simulation(best_trained, env)
 
 functions.nnPerformance(len(listOfBestScores),
-                        listOfBestScores, listOfAverageScores, env._max_episode_steps*acceptance_rate)
+                        listOfBestScores,
+                        listOfAverageScores,
+                        env._max_episode_steps*acceptance_rate)
 
 env.close()
