@@ -7,7 +7,7 @@ import random
 import pandas as pd
 
 
-class cartpoleevolition(object):
+class cartpoleevolution(object):
     """
     Class for simulation of evolutionary agents.
 
