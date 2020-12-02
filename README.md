@@ -45,9 +45,9 @@ Hyperparameters used in this gif:
 
 - Population = 50
 - Generations = 15
-- Mutation rate = $f(\text{score}, \text{goal}) = 1 - \frac{score}{goal}$ 
-- Max episode steps = $500$
-- Acceptance rate = $95\%$
+- Mutation rate = 1 - score/total 
+- Max episode steps = 500
+- Acceptance rate = 95%
 - Crossover: Uniform swap
 
 Output:
@@ -68,9 +68,9 @@ Hyperparameters used in this gif:
 
 - Population = 50
 - Generations = 15
-- Mutation rate = $f(\text{score}, \text{goal}) = 1 - \frac{score}{goal}$ 
-- Max episode steps = $1000$
-- Acceptance rate = $95\%$
+- Mutation rate = 1 - score/total 
+- Max episode steps = 1000
+- Acceptance rate = 95%
 - Crossover: Uniform swap
 
 Output:
@@ -90,12 +90,11 @@ Current average score: 1000.0
 ![](gifs/agent5000.gif)
 
 Hyperparameters used in this gif:
-
 - Population = 50
 - Generations = 15
-- Mutation rate = $f(\text{score}, \text{goal}) = 1 - \frac{score}{goal}$ 
-- Max episode steps = $5000$
-- Acceptance rate = $95\%$
+- Mutation rate = 1 - score/total 
+- Max episode steps = 5000
+- Acceptance rate = 95%
 - Crossover: Uniform swap
 
 Output:
