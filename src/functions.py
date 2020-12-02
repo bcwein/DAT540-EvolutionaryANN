@@ -265,7 +265,7 @@ def partial_fit(best_trained, best_network, env):
     return best_trained
 
 
-def nnPerformance(generation, best_score, average_score):
+def nnPerformance(generation, best_score, average_score, acceptanceCriteria):
     """Visualize the performance from each generation.
 
     Author: Vegard Rongve
@@ -279,8 +279,10 @@ def nnPerformance(generation, best_score, average_score):
     """
     plt.plot(range(1, generation+1), best_score, label="Max score")
     plt.plot(range(1, generation+1), average_score, label="Average score")
-    plt.legend()
     plt.title('Fitness through the generations')
+    plt.axhline(y=acceptanceCriteria, color='r',
+                linestyle='--', label="Acceptance criteria")
+    plt.legend()
     plt.xlabel("Generations")
     plt.ylabel("Fitness")
     plt.show()
