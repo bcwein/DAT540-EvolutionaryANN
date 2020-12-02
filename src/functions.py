@@ -15,6 +15,7 @@ import numpy as np
 import random
 import copy
 import matplotlib.pyplot as plt
+from matplotlib import animation
 
 
 def create_new_network(env):
@@ -167,7 +168,7 @@ def breedCrossover(nn1, nn2):
     return [child1, child2]
 
 
-def show_simulation(network, env):
+def show_simulation(network, env, savetofile=False, filename=None):
     """Display a simulation of a single given network in a given environment.
 
     Author: Marius Sørensen
@@ -176,11 +177,14 @@ def show_simulation(network, env):
         network (MLPClassifier): The network to use for simulation
         env (TimeLimit): An OpenAI gym environment in which to
         run the simulation
+        savetofile (boolean): Save simulation as gif
+        filename (string): Filename to save simulation as
     """
     observation = env.reset()
     score = 0
     actions = np.empty(5)
     terminate = False
+    frames = []
     while not(terminate):
         j = 0
         action = int(network.predict(
@@ -191,7 +195,12 @@ def show_simulation(network, env):
         score += reward
         j += 1
         actions[j % 5] = action
-        env.render()
+        if savetofile:
+            frames.append(env.render(mode="rgb_array"))
+        else:
+            env.render()
+    if savetofile:
+        save_frames_as_gif(frames, path='./gifs/', filename=filename)
     return score
 
 
@@ -302,3 +311,27 @@ def mutation_rate(score, goal):
         goal (float): [Linear function decreasing as score -> goal]
     """
     return(1 - (score/goal))
+
+
+def save_frames_as_gif(frames, path='./', filename='gym_animation.gif'):
+    """Save environment render as gif.
+
+    Args:
+        frames (List): [List of env.render(mode="rgb_array")]
+        path (str, optional): [Filepath]. Defaults to './'.
+        filename (str, optional): [Filename of gif].
+    """
+    # Mess with this to change frame size
+    plt.figure(figsize=(frames[0].shape[1] / 72.0,
+                        frames[0].shape[0] / 72.0), dpi=72)
+
+    patch = plt.imshow(frames[0])
+    plt.axis('off')
+
+    def animate(i):
+        patch.set_data(frames[i])
+
+    anim = animation.FuncAnimation(
+        plt.gcf(), animate, frames=len(frames), interval=50)
+
+    anim.save(path + filename, writer='pillow', fps=15)
