@@ -158,9 +158,6 @@ def de_crossover(nn1, nn2):
                 ) * (intercepts2Flat-intercepts1Flat)
             ).reshape(shape)
         )
-
-    # individual= father1 + uniform_01_random*(father2-father1)
-
     return newcoefs, newintercepts
 
 
