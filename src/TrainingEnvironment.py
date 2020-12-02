@@ -12,8 +12,11 @@ global_best_score = 0
 scoreList = np.zeros(100)
 
 env = gym.make('CartPole-v1')
-env._max_episode_steps = 5000
+env._max_episode_steps = 500
 acceptance_rate = 0.95
+
+listOfAverageScores = []
+listOfBestScores = []
 
 # Trained agent
 best_trained = functions.create_new_network(env)
@@ -31,8 +34,8 @@ for i in range(generations):
         print(
             "[" + "="*(n + 1) + " "*(population_size - n - 1) + "]", end="\r"
         )
+        j = 0
         while not(terminate):
-            j = 0
             action = int(agent.predict(
                 observation.reshape(1, -1).reshape(1, -1)))
             if j > 5 and sum(actions) % 5 == 0:
@@ -52,6 +55,9 @@ for i in range(generations):
         np.set_printoptions(suppress=True)
         # print(scoreList)
         functions.show_simulation(population[parents_index[0]], env)
+
+        listOfAverageScores.append(np.average(fit))
+        listOfBestScores.append(current_best_score)
         break
 
     score_probability = fit/sum(fit)
@@ -94,13 +100,18 @@ for i in range(generations):
         f'Gen {i+1}: Average: {np.average(fit)} | Best: {current_best_score}'
     )
 
-# Network based on average weight and bias over all levels
-# avgAgent = functions.average_weight_and_bias(avgAgents, env)
+    # Network based on average weight and bias over all levels
+    # avgAgent = functions.average_weight_and_bias(avgAgents, env)
+
+    listOfAverageScores.append(np.average(fit))
+    listOfBestScores.append(current_best_score)
 
 # Render of best, average and trained network
 # functions.show_simulation(best_network, env)
 # functions.show_simulation(avgAgent, env)
 # functions.show_simulation(best_trained, env)
 
+functions.nnPerformance(len(listOfBestScores),
+                        listOfBestScores, listOfAverageScores)
 
 env.close()

@@ -14,6 +14,7 @@ from sklearn.neural_network import MLPClassifier
 import numpy as np
 import random
 import copy
+import matplotlib.pyplot as plt
 
 
 def create_new_network(env):
@@ -262,6 +263,27 @@ def partial_fit(best_trained, best_network, env):
     )
 
     return best_trained
+
+
+def nnPerformance(generation, best_score, average_score):
+    """Visualize the performance from each generation.
+
+    Author: Vegard Rongve
+
+    Args:
+        generation: generation size
+        best_score: list with best scores from each generation
+        average_score: list with average scores from each generation
+
+    Returns:Plot
+    """
+    plt.plot(range(1, generation+1), best_score, label="Max score")
+    plt.plot(range(1, generation+1), average_score, label="Average score")
+    plt.legend()
+    plt.title('Fitness through the generations')
+    plt.xlabel("Generations")
+    plt.ylabel("Fitness")
+    plt.show()
 
 
 def mutation_rate(score, goal):
