@@ -101,16 +101,16 @@ def mutationFunc_W_B(agent, mutation_rate, method):
                     else:
                         if(type(swappedRow) == np.float64):
                             if method == 'gaussian':
-                                swappedRow +=  np.random.normal(0, 2)
+                                swappedRow += np.random.normal(0, 2)
                             elif method == 'uniform':
                                 swappedRow = random.random()
                         else:
                             for inner in swappedRow:
                                 if method == 'gaussian':
                                     inner += np.random.normal(0, 2)
-                                elif method =='uniform':
+                                elif method == 'uniform':
                                     inner = random.random()
-      
+
     return agent
 
 
