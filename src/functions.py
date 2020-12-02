@@ -132,35 +132,32 @@ def mutation_with_flatten(agent, mutation_rate, method):
             node_item = copy.copy(agent.intercepts_)
 
         for el in node_item:
-            for swappedRow in el:
-                if (random.random() < mutation_rate):
-                    random1 = int(random.random()*len(el))
-                    random2 = int(random.random()*len(el))
-                    if(random1 > random2):
-                        random2, random1 = random1, random2
+            el = np.ravel(el)
+            if (random.random() < mutation_rate):
+                random1 = int(random.random()*len(el))
+                random2 = int(random.random()*len(el))
+                if(random1 > random2):
+                    random2, random1 = random1, random2
 
-                    if(method == 'swap'):
-                        row1 = copy.copy(swappedRow)
-                        row2 = copy.copy(el[random1])
-                        swappedRow = row2
-                        el[random1] = row1
+                if(method == 'swap'):
+                    el[random1], el[random2] = el[random2], el[random1] 
 
-                    elif(method == 'scramble'):
-                        random.shuffle(el[random1:random2])
+                elif(method == 'scramble'):
+                    random.shuffle(el[random1:random2])
 
-                    elif(method == 'inverse'):
-                        el[random1:random2] = el[random1:random2][::-1]
+                elif(method == 'inverse'):
+                    el[random1:random2] = el[random1:random2][::-1]
 
-                    elif(method == 'uniform'):
-                        randVal = random.random()
-                        el[random1] = randVal
-                    
-                    elif(method== 'gaussian'):
-                        if(type(swappedRow) == np.float64):
-                            swappedRow += np.random.normal(0, 2)
-                        else:
-                            for inner in swappedRow:
-                                inner += np.random.normal(0, 2)
+                elif(method == 'uniform'):
+                    randVal = random.random()
+                    el[random1] = randVal
+
+                # elif(method== 'gaussian'):
+                #     if(type(swappedRow) == np.float64):
+                #         swappedRow += np.random.normal(0, 2)
+                #     else:
+                #         for inner in swappedRow:
+                #             inner += np.random.normal(0, 2)
                     
     return agent
 
