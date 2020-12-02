@@ -105,13 +105,21 @@ def mutationFunc_W_B(agent, mutation_rate, method):
                         randVal = random.random()
                         el[random1] = randVal
                     
+                    elif(method== 'gaussian'):
+                        if(type(swappedRow) == np.float64):
+                            swappedRow += np.random.normal(0, 2)
+                        else:
+                            for inner in swappedRow:
+                                inner += np.random.normal(0, 2)
+                    
     return agent
 
 def mutation_with_flatten(agent, mutation_rate, method):
     """Mutate agents weights and biases
 
     This function differs from MutationFunc_W_B by flattening the
-    weight and bias matrices before executing the mutations.
+    weight and bias matrices before executing the mutations, then reshaping
+    to their original shape before returning the agent.
 
     Author:
         Ove Jørgensen, Johanna Kinstad
@@ -149,15 +157,16 @@ def mutation_with_flatten(agent, mutation_rate, method):
                     el[random1:random2] = el[random1:random2][::-1]
 
                 elif(method == 'uniform'):
-                    randVal = random.random()
-                    el[random1] = randVal
+                    rand_val = random.random()
+                    el[random1] = rand_val
 
-                # elif(method== 'gaussian'):
-                #     if(type(swappedRow) == np.float64):
-                #         swappedRow += np.random.normal(0, 2)
-                #     else:
-                #         for inner in swappedRow:
-                #             inner += np.random.normal(0, 2)
+                elif(method== 'gaussian'):
+                    gauss_val = np.random.normal(0, 2)
+                    el[random1] += gauss_val
+
+        if item == 0:
+            agent.coefs_[0] = node_item[0].reshape(4,4)
+            agent.coefs_[1] = node_item[1].reshape(4,1)
                     
     return agent
 
