@@ -114,6 +114,31 @@ def mutationFunc_W_B(agent, mutation_rate, method):
     return agent
 
 
+def de_crossover(nn1, nn2):
+    # differential evolution
+    newcoefs = []
+    for i in range(2):
+        shape = nn1.coefs_[i].shape
+        coef1Flat = np.ravel(nn1.coefs_[i])
+        coef2Flat = np.ravel(nn2.coefs_[i])
+
+        newcoefs.append(np.array(coef1Flat + np.random.uniform(0,
+                                                               1, len(coef1Flat))*(coef2Flat-coef1Flat)).reshape(shape))
+
+    newintercepts = []
+    for i in range(2):
+        shape = nn1.intercepts_[i].shape
+        intercepts1Flat = np.ravel(nn1.intercepts_[i])
+        intercepts2Flat = np.ravel(nn2.intercepts_[i])
+
+        newintercepts.append(np.array(intercepts1Flat + np.random.uniform(
+            0, 1, len(intercepts1Flat))*(intercepts2Flat-intercepts1Flat)).reshape(shape))
+
+    # individual= father1 + uniform_01_random*(father2-father1)
+
+    return newcoefs, newintercepts
+
+
 def breedCrossover(nn1, nn2):
     """Breeds a child from 2 parents using crossover.
 

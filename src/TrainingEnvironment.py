@@ -81,19 +81,19 @@ for i in range(generations):
                                              env)
 
     # Breed new nn's
-    for j in range(0, int(population_size), 2):
-        children = functions.breedCrossover(parent1, parent2)
-        for k in range(2):
-            population[j+k].coefs_ = children[k][0]
-            population[j+k].intercepts_ = children[k][1]
+    # for j in range(0, int(population_size), 2):
+    #     children = functions.breedCrossover(parent1, parent2)
+    #     for k in range(2):
+    #         population[j+k].coefs_ = children[k][0]
+    #         population[j+k].intercepts_ = children[k][1]
 
     for j in range(population_size):
-        population[j] = functions.mutationFunc_W_B(population[j],
-                                                   functions.mutation_rate(
-            current_best_score,
-            env._max_episode_steps),
-            'swap'
-        )
+        newCoefs, newIntercepts = functions.de_crossover(parent1, parent2)
+        population[j].coefs_ = newCoefs
+        population[j].intercepts_ = newIntercepts
+
+        population[j] = functions.mutationFunc_W_B(population[j], functions.mutation_rate(
+            current_best_score, env._max_episode_steps), 'swap')
 
     print(" " * (population_size + 2), end="\r")
     print(
