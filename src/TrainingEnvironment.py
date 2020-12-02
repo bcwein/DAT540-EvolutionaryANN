@@ -81,17 +81,17 @@ for i in range(generations):
                                              env)
 
     # Breed new nn's
-    for j in range(0, int(population_size), 2):
+    for j in range(0, population_size, 2):
         children = functions.breedCrossover(parent1, parent2)
         for k in range(2):
             population[j+k].coefs_ = children[k][0]
             population[j+k].intercepts_ = children[k][1]
 
-    for j in range(population_size):
-        population[j] = functions.mutationFunc_W_B(population[j],
-                                                   functions.mutation_rate(
-            current_best_score,
-            env._max_episode_steps),
+    improvable_network_indices = (fit < env._max_episode_steps * (1 - ((1 - acceptance_rate) / 2))).nonzero()[0]
+    for j in improvable_network_indices:
+        population[j] = functions.mutationFunc_W_B(
+            population[j],
+            0.05,
             'swap'
         )
 
