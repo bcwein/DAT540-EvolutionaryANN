@@ -95,16 +95,6 @@ for i in range(generations):
     for j in improvable_network_indices:
         population[j] = functions.mutationFunc_W_B(
             population[j],
-            functions.mutation_rate(np.mean(fit), env._max_episode_steps),
-            'swap'
-        )
-
-    halved_acceptance_rate = (1 - ((1 - acceptance_rate) / 2))
-    comparison = env._max_episode_steps * halved_acceptance_rate
-    improvable_network_indices = (fit < comparison).nonzero()[0]
-    for j in improvable_network_indices:
-        population[j] = functions.mutationFunc_W_B(
-            population[j],
             0.05,
             'swap'
         )
