@@ -3,11 +3,16 @@ Python helper functions for training agents.
 
 Functions:
     create_new_network - Create new MLP Classifier.
-    initialise_population -  Initalises a population of agents
-    mutationFunc_W_B -  mutate both weights and biases for an agent
-    breedCrossover - Breeds a child from 2 parents using crossover
-    show_simulation - Display a simulation of a single given network
-    average_weight_and_bias - Calculate the average weight and bias
+    initialise_population -  Initalises a population of agents.
+    mutationFunc_W_B -  Mutate both weights and biases for an agent.
+    de_crossover - Differential crossover.
+    breedCrossover - Breeds a child from 2 parents using crossover.
+    show_simulation - Display a simulation of a single given network.
+    average_weight_and_bias - Calculate the average weight and bias.
+    partial_fit - Function for partial fitting model on experience.
+    nnPerformance - Visualize the performance from each generation.
+    mutation_rate - Dynamic mutation rate function.
+    save_frames_as_gif - Function for storing gif of trained agent.
 """
 
 from sklearn.neural_network import MLPClassifier
@@ -19,16 +24,16 @@ from matplotlib import animation
 
 
 def create_new_network(env):
-    """Create a new MLPCLassifier.
+    """[Create a new MLPCLassifier].
 
-    Author: Bjørn Christian Weinbach, Marius Sørensen
+    Author:
+        [Bjørn Christian Weinbach, Marius Sørensen]
 
     Args:
-        env: The environment to get training samples from
+        env ([type]): [description]
 
     Returns:
-        MLPClassifier: The new NN partially fitted to
-        sample data from the environment
+        [type]: [description]
     """
     return MLPClassifier(
         batch_size=1,
@@ -44,15 +49,14 @@ def create_new_network(env):
 
 
 def initialise_population(size, env):
-    """Initialise size number of agents.
-
-    Author: Bjørn Christian Weinbach
+    """[Initialise size number of agents].
 
     Args:
-        size ([int]): [Number of agents in population]
+        size ([Int]): [Number of agents in population]
+        env ([OpenAI Gym]): [Environment]
 
     Returns:
-        [population]: [List of agents]
+        [type]: [description]
     """
     population = []
     for _ in range(size):
@@ -124,7 +128,8 @@ def de_crossover(nn1, nn2):
         nn2 (MLPClassifier): [Neural Network]
 
     Returns:
-        [type]: [description]
+        [newcoeffs]: [Weights of new network]
+        [newintercepts]: [Biases of new network]
     """
     # differential evolution
     newcoefs = []
@@ -264,6 +269,7 @@ def average_weight_and_bias(population, env):
 
     Args:
         population: The population from which to calculate
+        env: OpenAI Gym environment.
 
     Returns:
         [avg_network]: A new network given the average bias and weight
@@ -336,6 +342,7 @@ def nnPerformance(generation, best_score, average_score, acceptanceCriteria):
         generation: generation size
         best_score: list with best scores from each generation
         average_score: list with average scores from each generation
+        acceptanceCriteria: Horisontal line of acceptance ratio.
 
     Returns:Plot
     """
@@ -343,7 +350,7 @@ def nnPerformance(generation, best_score, average_score, acceptanceCriteria):
     plt.plot(range(1, generation+1), average_score, label="Average score")
     plt.title('Fitness through the generations')
     plt.axhline(y=acceptanceCriteria, color='r',
-                linestyle='--', label="Acceptance criteria")
+                linestyle='--', label="Acceptance ratio")
     plt.legend()
     plt.xlabel("Generations")
     plt.ylabel("Fitness")
@@ -364,6 +371,9 @@ def mutation_rate(score, goal):
     Args:
         score (float): [score of best agent]
         goal (float): [Linear function decreasing as score -> goal]
+
+    Return:
+        (float): [Mutation rate]
     """
     return(1 - (score/goal))
 
