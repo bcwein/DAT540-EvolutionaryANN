@@ -111,6 +111,7 @@ Current average score: 4950.11
 
 # Agent_50000
 ![](gifs/agent_50000.png)
+
 Hyperparameters used in this gif:
 - Population = 50
 - Generations = 15
