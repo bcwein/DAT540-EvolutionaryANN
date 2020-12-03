@@ -9,5 +9,3 @@ dependencies:
   - pycodestyle
   - pydocstyle
   - scikit-learn
-  - matplotlib
-  - seaborn

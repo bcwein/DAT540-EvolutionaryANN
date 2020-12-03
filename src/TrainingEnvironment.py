@@ -20,25 +20,27 @@ env._max_episode_steps = 500
 acceptance_rate = 0.95
 population_size = 50
 generations = 15
-
-# Trained agent
-best_trained = functions.create_new_network(env)
+mutation = "swap"
 
 # Population
 population = functions.initialise_population(population_size, env)
 fit = np.zeros(population_size)
 max_score = 0
 
+# Iterate over generations
 for i in range(generations):
+    # Iterate over agents.
     for n, agent in enumerate(population):
         observation = env.reset()
         score = 0
         actions = np.empty(5)
         terminate = False
+        # Loading bar
         print(
             "[" + "="*(n + 1) + " "*(population_size - n - 1) + "]", end="\r"
         )
         j = 0
+        # Agent-Environment Interaction
         while not(terminate):
             action = int(agent.predict(
                 observation.reshape(1, -1).reshape(1, -1)))
@@ -49,15 +51,17 @@ for i in range(generations):
             j += 1
             actions[j % 5] = action
             terminate = done
+        # Store performance.
         fit[n] = score
-
         scoreList[(population_size*i+n) % 100] = score
+
+    # Termination when acceptance rate achieved.
     if np.mean(scoreList) >= env._max_episode_steps*acceptance_rate:
         print(" " * (population_size + 2), end="\r")
         print(f"\nSuccess in generation {i+1}!")
         print(f"Current average score: {np.mean(scoreList)}")
         np.set_printoptions(suppress=True)
-        # print(scoreList)
+        # Render best agent.
         functions.show_simulation(population[parents_index[0]], env)
 
         listOfAverageScores.append(np.average(fit))
@@ -80,25 +84,14 @@ for i in range(generations):
     if(current_best_score >= max_score):
         max_score = current_best_score
         best_network = copy.copy(population[current_best_index])
-        best_trained = functions.partial_fit(best_trained,
-                                             best_network,
-                                             env)
 
+    # Breed new agents
     for j in range(population_size):
         newCoefs, newIntercepts = functions.de_crossover(parent1, parent2)
         population[j].coefs_ = newCoefs
         population[j].intercepts_ = newIntercepts
 
-    halved_acceptance_rate = (1 - ((1 - acceptance_rate) / 2))
-    comparison = env._max_episode_steps * halved_acceptance_rate
-    improvable_network_indices = (fit < comparison).nonzero()[0]
-    for j in improvable_network_indices:
-        population[j] = functions.mutationFunc_W_B(
-            population[j],
-            functions.mutation_rate(np.mean(fit), env._max_episode_steps),
-            'swap'
-        )
-
+    # Mutate agents that does not perform well.
     halved_acceptance_rate = (1 - ((1 - acceptance_rate) / 2))
     comparison = env._max_episode_steps * halved_acceptance_rate
     improvable_network_indices = (fit < comparison).nonzero()[0]
@@ -106,7 +99,7 @@ for i in range(generations):
         population[j] = functions.mutationFunc_W_B(
             population[j],
             0.05,
-            'swap'
+            mutation
         )
 
     print(" " * (population_size + 2), end="\r")
@@ -114,16 +107,8 @@ for i in range(generations):
         f'Gen {i+1}: Average: {np.average(fit)} | Best: {current_best_score}'
     )
 
-    # Network based on average weight and bias over all levels
-    # avgAgent = functions.average_weight_and_bias(avgAgents, env)
-
     listOfAverageScores.append(np.average(fit))
     listOfBestScores.append(current_best_score)
-
-# Render of best, average and trained network
-# functions.show_simulation(best_network, env)
-# functions.show_simulation(avgAgent, env)
-# functions.show_simulation(best_trained, env)
 
 functions.nnPerformance(len(listOfBestScores),
                         listOfBestScores,
