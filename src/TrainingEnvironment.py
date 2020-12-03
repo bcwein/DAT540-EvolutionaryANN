@@ -20,6 +20,7 @@ env._max_episode_steps = 500
 acceptance_rate = 0.95
 population_size = 50
 generations = 15
+mutation = "swap"
 
 # Population
 population = functions.initialise_population(population_size, env)
@@ -98,7 +99,7 @@ for i in range(generations):
         population[j] = functions.mutationFunc_W_B(
             population[j],
             0.05,
-            'swap'
+            mutation
         )
 
     print(" " * (population_size + 2), end="\r")
