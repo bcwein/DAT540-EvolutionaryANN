@@ -24,6 +24,7 @@ generations = 15
 # Trained agent
 best_trained = functions.create_new_network(env)
 
+# Population
 population = functions.initialise_population(population_size, env)
 fit = np.zeros(population_size)
 max_score = 0

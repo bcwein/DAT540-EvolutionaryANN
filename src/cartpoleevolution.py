@@ -19,7 +19,6 @@ class cartpoleevolution(object):
         """Initialise instance of class."""
         self.env = gym.make('CartPole-v1')
         self.population = []
-        self.MUTATION_RATE = 0.05
 
     def initialise_population(self, size):
         """Initialise size number of agents.
@@ -121,7 +120,7 @@ class cartpoleevolution(object):
 
         return [child1, child2]
 
-    def mutationFunc_W_B(self, j, method):
+    def mutationFunc_W_B(self, j, method, score):
         """Mutate agents weights and biases.
 
         Author:
@@ -141,7 +140,7 @@ class cartpoleevolution(object):
 
             for el in node_item:
                 for swappedRow in el:
-                    if (random.random() < self.MUTATION_RATE):
+                    if (random.random() < self.mutation_rate(score)):
                         random1 = int(random.random()*len(el))
                         random2 = int(random.random()*len(el))
                         if(random1 > random2):
@@ -239,12 +238,17 @@ class cartpoleevolution(object):
                     self.population[j+k].coefs_ = children[k][0]
                     self.population[j+k].intercepts_ = children[k][1]
 
-            halved_acceptance_rate = (1 - ((1 - acceptance_rate) / 2))
-            comparison = env._max_episode_steps * halved_acceptance_rate
-            improvable_network_indices = (fit < comparison).nonzero()[0]
-            for j in improvable_network_indices:
-                self.mutationFunc_W_B(j, mutation)
+            for j in range(agents):
+                self.mutationFunc_W_B(j,
+                                      mutation,
+                                      current_best_score)
 
             df['Generation ' + str(i)] = fit
+
+            # Terminate if mean score > acceptance_rate
+            if (np.mean(scoreList) >=
+               self.env._max_episode_steps * acceptance_rate):
+                break
+
         df.index.name = "Agents"
         return df
