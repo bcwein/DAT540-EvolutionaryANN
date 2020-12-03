@@ -240,7 +240,7 @@ class cartpoleevolution(object):
                     self.population[j+k].intercepts_ = children[k][1]
 
             halved_acceptance_rate = (1 - ((1 - acceptance_rate) / 2))
-            comparison = env._max_episode_steps * halved_acceptance_rate
+            comparison = self.env._max_episode_steps * halved_acceptance_rate
             improvable_network_indices = (fit < comparison).nonzero()[0]
             for j in improvable_network_indices:
                 self.mutationFunc_W_B(j, mutation)
