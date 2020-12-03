@@ -4,7 +4,7 @@ Project in DAT540 for exploring evolutionary ANNs in OpenAI's cartpole environme
 ## Group Members
 * Bjørn Christian Weinbach - Data Science
 * Marius Sørensen - Data Science
-* Ove Jørgensen - Data Science
+* [Ove Jørgensen](https://github.com/ovejorgensen) - Data Science
 * Håvard Godal - Data Science
 * Johanna Kinstad - Data Science
 * Vegard Rongve - Data Science
