@@ -89,11 +89,13 @@ for i in range(generations):
         population[j].coefs_ = newCoefs
         population[j].intercepts_ = newIntercepts
 
+    halved_acceptance_rate = (1 - ((1 - acceptance_rate) / 2))
+    comparison = env._max_episode_steps * halved_acceptance_rate
+    improvable_network_indices = (fit < comparison).nonzero()[0]
+    for j in improvable_network_indices:
         population[j] = functions.mutationFunc_W_B(
             population[j],
-            functions.mutation_rate(
-                current_best_score, env._max_episode_steps
-            ),
+            functions.mutation_rate(np.mean(fit), env._max_episode_steps),
             'swap'
         )
 

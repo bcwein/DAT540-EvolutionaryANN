@@ -120,7 +120,7 @@ class cartpoleevolution(object):
 
         return [child1, child2]
 
-    def mutationFunc_W_B(self, j, method, score):
+    def mutationFunc_W_B(self, j, method, current_average):
         """Mutate agents weights and biases.
 
         Author:
@@ -140,7 +140,7 @@ class cartpoleevolution(object):
 
             for el in node_item:
                 for swappedRow in el:
-                    if (random.random() < self.mutation_rate(score)):
+                    if (random.random() < self.mutation_rate(current_average)):
                         random1 = int(random.random()*len(el))
                         random2 = int(random.random()*len(el))
                         if(random1 > random2):
@@ -238,10 +238,11 @@ class cartpoleevolution(object):
                     self.population[j+k].coefs_ = children[k][0]
                     self.population[j+k].intercepts_ = children[k][1]
 
-            for j in range(agents):
-                self.mutationFunc_W_B(j,
-                                      mutation,
-                                      current_best_score)
+            halved_acceptance_rate = (1 - ((1 - acceptance_rate) / 2))
+            comparison = env._max_episode_steps * halved_acceptance_rate
+            improvable_network_indices = (fit < comparison).nonzero()[0]
+            for j in improvable_network_indices:
+                self.mutationFunc_W_B(j, mutation, mean(fit))
 
             df['Generation ' + str(i)] = fit
 
