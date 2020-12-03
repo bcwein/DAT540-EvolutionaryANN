@@ -83,9 +83,6 @@ for i in range(generations):
     if(current_best_score >= max_score):
         max_score = current_best_score
         best_network = copy.copy(population[current_best_index])
-        best_trained = functions.partial_fit(best_trained,
-                                             best_network,
-                                             env)
 
     # Breed new agents
     for j in range(population_size):
