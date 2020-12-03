@@ -97,8 +97,13 @@ for i in range(generations):
         population[j].coefs_ = newCoefs
         population[j].intercepts_ = newIntercepts
 
-        population[j] = functions.mutationFunc_W_B(population[j], functions.mutation_rate(
-            current_best_score, env._max_episode_steps), 'swap')
+        population[j] = functions.mutationFunc_W_B(
+            population[j],
+            functions.mutation_rate(
+                current_best_score, env._max_episode_steps
+            ),
+            'swap'
+        )
 
     print(" " * (population_size + 2), end="\r")
     print(
