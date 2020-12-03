@@ -108,3 +108,30 @@ Gen 5: Average: 4900.22 | Best: 5000.0
 Success in generation 6!
 Current average score: 4950.11
 ```
+
+# Agent_50000
+![](gifs/agent_50000.png)
+Hyperparameters used in this gif:
+- Population = 50
+- Generations = 15
+- Mutation: Selective mutation with mutation rate = 0.05.
+- Max episode steps = 50000
+- Acceptance rate = 95%
+- Crossover: Differential crossover
+- Mutation: 
+
+
+Output:
+```
+Gen 1: Average: 29.52 | Best: 294.0
+Gen 2: Average: 4467.62 | Best: 50000.0
+Gen 3: Average: 7784.74 | Best: 50000.0
+Gen 4: Average: 9848.68 | Best: 50000.0
+Gen 5: Average: 22265.28 | Best: 50000.0
+Gen 6: Average: 30214.46 | Best: 50000.0
+Gen 7: Average: 41225.38 | Best: 50000.0
+Gen 8: Average: 47040.8 | Best: 50000.0
+
+Success in generation 9!
+Current average score: 48022.23
+```
