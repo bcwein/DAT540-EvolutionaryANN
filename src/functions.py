@@ -69,7 +69,7 @@ def mutationFunc_W_B(agent, mutation_rate, method):
     Args:
         agent ([MLPClassifier]): [Neural Network of agent]
         mutation_rate ([float]): [Probability of mutation]
-        method ([ "swap" | "inverse" | "scramble" ]):
+        method ([ "swap" | "inverse" | "scramble" | "uniform" | "gaussian" ]):
             [Type of mutation operation]
 
     Returns:
@@ -101,72 +101,18 @@ def mutationFunc_W_B(agent, mutation_rate, method):
                     elif(method == 'inverse'):
                         el[random1:random2] = el[random1:random2][::-1]
 
-                    elif(method == 'uniform'):
-                        randVal = random.random()
-                        el[random1] = randVal
-                    
-                    elif(method== 'gaussian'):
+                    else:
                         if(type(swappedRow) == np.float64):
-                            swappedRow += np.random.normal(0, 2)
+                            if method == 'gaussian':
+                                swappedRow +=  np.random.normal(0, 2)
+                            elif method == 'uniform':
+                                swappedRow = random.random()
                         else:
                             for inner in swappedRow:
-                                inner += np.random.normal(0, 2)
-                    
-    return agent
-
-def mutation_with_flatten(agent, mutation_rate, method):
-    """Mutate agents weights and biases
-
-    This function differs from MutationFunc_W_B by flattening the
-    weight and bias matrices before executing the mutations, then reshaping
-    to their original shape before returning the agent.
-
-    Author:
-        Ove Jørgensen, Johanna Kinstad
-
-    Args:
-        agent ([MLPClassifier]): [Neural Network of agent]
-        mutation_rate ([float]): [Probability of mutation]
-        method ([ "swap" | "inverse" | "scramble" | "uniform" | "gaussian" ]):
-            [Type of mutation operation]
-
-    Returns:
-        [agent]: [Mutated agent]
-    """
-    for item in range(2):
-        if item == 0:
-            node_item = agent.coefs_
-        else:
-            node_item = copy.copy(agent.intercepts_)
-
-        for el in node_item:
-            el = np.ravel(el)
-            if (random.random() < mutation_rate):
-                random1 = int(random.random()*len(el))
-                random2 = int(random.random()*len(el))
-                if(random1 > random2):
-                    random2, random1 = random1, random2
-
-                if(method == 'swap'):
-                    el[random1], el[random2] = el[random2], el[random1] 
-
-                elif(method == 'scramble'):
-                    random.shuffle(el[random1:random2])
-
-                elif(method == 'inverse'):
-                    el[random1:random2] = el[random1:random2][::-1]
-
-                elif(method == 'uniform'):
-                    rand_val = random.random()
-                    el[random1] = rand_val
-
-                elif(method== 'gaussian'):
-                    gauss_val = np.random.normal(0, 2)
-                    el[random1] += gauss_val
-
-        if item == 0:
-            agent.coefs_[0] = node_item[0].reshape(4,4)
-            agent.coefs_[1] = node_item[1].reshape(4,1)
+                                if method == 'gaussian':
+                                    inner += np.random.normal(0, 2)
+                                elif method =='uniform':
+                                    inner = random.random()
                     
     return agent
 
