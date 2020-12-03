@@ -5,18 +5,23 @@ import numpy as np
 import functions
 import copy
 
-population_size = 50
-generations = 15
+# Support Metrics
 avgAgents = []
 global_best_score = 0
 scoreList = np.zeros(100)
-
-env = gym.make('CartPole-v1')
-env._max_episode_steps = 500
-acceptance_rate = 0.95
-
 listOfAverageScores = []
 listOfBestScores = []
+
+# Environment
+env = gym.make('CartPole-v1')
+
+# Hyperparameters
+env._max_episode_steps = 5000
+acceptance_rate = 0.95
+population_size = 50
+generations = 15
+
+
 
 # Trained agent
 best_trained = functions.create_new_network(env)
