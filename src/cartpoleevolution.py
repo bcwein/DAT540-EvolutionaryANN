@@ -244,5 +244,11 @@ class cartpoleevolution(object):
                                       current_best_score)
 
             df['Generation ' + str(i)] = fit
+
+            # Terminate if mean score > acceptance_rate
+            if (np.mean(scoreList) >=
+               self.env._max_episode_steps * acceptance_rate):
+                break
+
         df.index.name = "Agents"
         return df
