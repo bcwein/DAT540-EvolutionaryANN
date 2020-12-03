@@ -21,8 +21,6 @@ acceptance_rate = 0.95
 population_size = 50
 generations = 15
 
-
-
 # Trained agent
 best_trained = functions.create_new_network(env)
 
