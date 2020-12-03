@@ -2,12 +2,12 @@
 Project in DAT540 for exploring evolutionary ANNs in OpenAI's cartpole environment.
 
 ## Group Members
-* Bjørn Christian Weinbach - Data Science
-* Marius Sørensen - Data Science
+* [Bjørn Christian Weinbach](https://github.com/bcwein) - Data Science
+* [Marius Sørensen](https://github.com/sorensenmarius) - Data Science
 * [Ove Jørgensen](https://github.com/ovejorgensen) - Data Science
-* Håvard Godal - Data Science
-* Johanna Kinstad - Data Science
-* Vegard Rongve - Data Science
+* [Håvard Godal](https://github.com/HGodal) - Data Science
+* [Johanna Kinstad](https://github.com/johannakinstad) - Data Science
+* [Vegard Rongve](https://github.com/VRongve) - Data Science
 
 ## Anaconda Environment
 To organise the libraries utilised in our project. A anaconda environment is stored in the folder "Environment". 
