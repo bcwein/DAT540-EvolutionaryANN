@@ -16,7 +16,7 @@ listOfBestScores = []
 env = gym.make('CartPole-v1')
 
 # Hyperparameters
-env._max_episode_steps = 5000
+env._max_episode_steps = 500
 acceptance_rate = 0.95
 population_size = 50
 generations = 15
@@ -83,13 +83,6 @@ for i in range(generations):
                                              best_network,
                                              env)
 
-    # Breed new nn's
-    # for j in range(0, int(population_size), 2):
-    #     children = functions.breedCrossover(parent1, parent2)
-    #     for k in range(2):
-    #         population[j+k].coefs_ = children[k][0]
-    #         population[j+k].intercepts_ = children[k][1]
-
     for j in range(population_size):
         newCoefs, newIntercepts = functions.de_crossover(parent1, parent2)
         population[j].coefs_ = newCoefs
@@ -100,6 +93,16 @@ for i in range(generations):
             functions.mutation_rate(
                 current_best_score, env._max_episode_steps
             ),
+            'swap'
+        )
+
+    halved_acceptance_rate = (1 - ((1 - acceptance_rate) / 2))
+    comparison = env._max_episode_steps * halved_acceptance_rate
+    improvable_network_indices = (fit < comparison).nonzero()[0]
+    for j in improvable_network_indices:
+        population[j] = functions.mutationFunc_W_B(
+            population[j],
+            0.05,
             'swap'
         )
 
