@@ -11,6 +11,7 @@ global_best_score = 0
 scoreList = np.zeros(100)
 listOfAverageScores = []
 listOfBestScores = []
+goalReached = False
 
 # Environment
 env = gym.make('CartPole-v1')
@@ -31,27 +32,12 @@ max_score = 0
 for i in range(generations):
     # Iterate over agents.
     for n, agent in enumerate(population):
-        observation = env.reset()
-        score = 0
-        actions = np.empty(5)
-        terminate = False
         # Loading bar
         print(
             "[" + "="*(n + 1) + " "*(population_size - n - 1) + "]", end="\r"
         )
-        j = 0
-        # Agent-Environment Interaction
-        while not(terminate):
-            action = int(agent.predict(
-                observation.reshape(1, -1).reshape(1, -1)))
-            if j > 5 and sum(actions) % 5 == 0:
-                action = env.action_space.sample()
-            observation, reward, done, _ = env.step(action)
-            score += reward
-            j += 1
-            actions[j % 5] = action
-            terminate = done
-        # Store performance.
+        score = functions.train_agent(agent, env)
+        # Store fitness.
         fit[n] = score
         scoreList[(population_size*i+n) % 100] = score
 

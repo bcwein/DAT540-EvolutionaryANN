@@ -314,6 +314,38 @@ def show_simulation(network, env, savetofile=False, filename=None):
     return score
 
 
+def train_agent(agent, env):
+    """Train an agent in an environment and return its fitness score.
+
+    Author: [Håvard Godal, Marius Sørensen]
+
+    Args:
+        agent (MLPClassifier): [Neural Network]
+        env ([OpenAI Gym]): [Environment]
+
+    Returns:
+        [score]: [Fitness score of agent]
+    """
+    observation = env.reset()
+    score = 0
+    actions = np.empty(5)
+    terminate = False
+    j = 0
+    # Agent-Environment Interaction
+    while not(terminate):
+        action = int(agent.predict(
+            observation.reshape(1, -1).reshape(1, -1)))
+        if j > 5 and sum(actions) % 5 == 0:
+            action = env.action_space.sample()
+        observation, reward, done, _ = env.step(action)
+        score += reward
+        j += 1
+        actions[j % 5] = action
+        terminate = done
+
+    return score
+
+
 def average_weight_and_bias(population, env):
     """Calculate the average weight and bias from a given population.
 
