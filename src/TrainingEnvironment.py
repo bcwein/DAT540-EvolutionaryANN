@@ -73,8 +73,8 @@ for i in range(generations):
         # functions.simulate_agent(population[best_agents_indexes[0]], env, True)
         break
 
-    parent1 = copy.copy(population[best_agents_indexes[0]])
-    parent2 = copy.copy(population[best_agents_indexes[1]])
+    parent1 = copy.deepcopy(population[best_agents_indexes[0]])
+    parent2 = copy.deepcopy(population[best_agents_indexes[1]])
 
     current_best_index = np.argmax(fit)
     current_best_score = fit[current_best_index]
@@ -82,7 +82,7 @@ for i in range(generations):
     # Store current global minimum
     if(current_best_score >= max_score):
         max_score = current_best_score
-        best_network = copy.copy(population[current_best_index])
+        best_network = copy.deepcopy(parent1)
 
     # Breed new agents
     for j in range(population_size):
