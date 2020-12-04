@@ -22,6 +22,10 @@ Open anaconda command line and type
 
 Anaconda will then set up a environment with the packages specifiedin the .yml file
 
+Finally, activate the environment
+
+> conda activate DAT540EANN
+
 ### Updating environment
 
 If you need to install another package, update the environment.yml file manually and use the command
