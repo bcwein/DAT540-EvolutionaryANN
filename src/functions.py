@@ -357,6 +357,69 @@ def nnPerformance(generation, best_score, average_score, acceptanceCriteria):
     plt.show()
 
 
+def crossoverSinglePoint(parent1, parent2):
+    """Breeds two childs from 2 parents using single point crossover.
+
+    Author: Vegard Rongve
+
+    Args:
+        parent1 ([MLPClassifier]): [Neural network parent nr 1]
+        parent2 ([MLPClassifier]): [Neural network parent nr 2]
+
+    Returns:
+        [children]: [List of two children containing coefs_ and intercepts_]
+    """
+
+    child1 = []
+    child2 = []
+
+    for item in range(2):
+        if item == 0:
+            p1 = parent1.coefs_
+            p2 = parent2.coefs_
+            # print("Test1")
+        else:
+            p1 = parent1.intercepts_
+            p2 = parent2.intercepts_
+            # print("Test2")
+
+        for i in range(2):
+            if i == 0:
+                param1 = p1[0]
+                param2 = p2[0]
+            else:
+                param1 = p1[1]
+                param2 = p2[1]
+
+            shape = param1.shape
+            flatParam1 = np.ravel(param1)
+            flatParam2 = np.ravel(param2)
+
+            #randIndex = int(random.random()*flatParam1.size)
+            randIndex = 1
+
+            ch1 = np.concatenate(
+                (flatParam1[:randIndex], flatParam2[randIndex:]))
+            ch2 = np.concatenate(
+                (flatParam2[:randIndex], flatParam1[randIndex:]))
+
+            # Reshape
+            ch1Reshape = np.reshape(ch1, shape)
+            ch2Reshape = np.reshape(ch2, shape)
+
+            child1.append(ch1Reshape)
+            child2.append(ch2Reshape)
+
+    return [child1[:2], child1[2:]], [child2[:2], child2[2:]], randIndex
+
+"""
+def sortPopulation(population, scores):
+    arr = np.array((population, scores)).T
+    sortArr = arr[np.argsort(arr[:, 1])].T
+
+    return sortArr[0]
+"""
+
 def mutation_rate(score, goal):
     """Dynamic mutation rate.
 
