@@ -38,6 +38,7 @@ acceptance_rate = 0.95
 population_size = 50
 generations = 15
 mutation_type = "swap"
+mutation_rate = 0.1
 
 current_best_score = 0
 
@@ -96,7 +97,7 @@ for i in range(generations):
     for j in improvable_network_indices:
         population[j] = functions.mutationFunc_W_B(
             population[j],
-            0.1,
+            mutation_rate,
             mutation_type
         )
 
