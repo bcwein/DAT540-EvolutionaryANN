@@ -12,9 +12,10 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: ['macos-latest', 'ubuntu-latest', 'windows-latest']
         python-version: ['3.8']
 
     steps:
@@ -25,8 +26,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        python -m pip install pycodestyle pydocstyle
+        conda env update --file Environment/DAT540EANN.yml --name base --prune
     - name: Lint with pycodestyle
       run: |
         pycodestyle . 

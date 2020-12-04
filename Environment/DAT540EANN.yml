@@ -3,9 +3,9 @@ channels:
   - defaults
   - conda-forge
 dependencies:
+  - python=3.8.5
   - gym
   - pylint
   - pycodestyle
   - pydocstyle
   - scikit-learn
-  - matplotlib
