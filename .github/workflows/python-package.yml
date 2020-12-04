@@ -12,9 +12,10 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: ['macos-latest', 'ubuntu-latest', 'windows-latest']
         python-version: ['3.8']
 
     steps:
@@ -33,3 +34,7 @@ jobs:
     - name: Lint with pydocstyle
       run: |
         pydocstyle . 
+    - name: Install dependencies
+      run: |
+        # $CONDA is an environment variable pointing to the root of the miniconda directory
+        $CONDA/bin/conda env update --file Environment/DAT540EANN.yml --name base --prune
