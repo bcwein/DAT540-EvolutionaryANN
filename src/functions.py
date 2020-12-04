@@ -369,7 +369,6 @@ def crossoverSinglePoint(parent1, parent2):
     Returns:
         [children]: [List of two children containing coefs_ and intercepts_]
     """
-
     child1 = []
     child2 = []
 
@@ -395,7 +394,7 @@ def crossoverSinglePoint(parent1, parent2):
             flatParam1 = np.ravel(param1)
             flatParam2 = np.ravel(param2)
 
-            #randIndex = int(random.random()*flatParam1.size)
+            # randIndex = int(random.random()*flatParam1.size)
             randIndex = 1
 
             ch1 = np.concatenate(
@@ -412,6 +411,7 @@ def crossoverSinglePoint(parent1, parent2):
 
     return [child1[:2], child1[2:]], [child2[:2], child2[2:]], randIndex
 
+
 """
 def sortPopulation(population, scores):
     arr = np.array((population, scores)).T
@@ -419,6 +419,7 @@ def sortPopulation(population, scores):
 
     return sortArr[0]
 """
+
 
 def mutation_rate(score, goal):
     """Dynamic mutation rate.
