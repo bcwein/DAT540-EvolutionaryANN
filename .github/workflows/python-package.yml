@@ -18,13 +18,10 @@ jobs:
         python-version: 3.8
     - name: Install dependencies
       run: |
-        # $CONDA is an environment variable pointing to the root of the miniconda directory
         $CONDA/bin/conda env update --file Environment/DAT540EANN.yml --name base
     - name: Lint with pycodestyle and pydocstyle
       run: |
-        # stop the build if there are Python syntax errors
         $CONDA/bin/pycodestyle .
-         # stop the build if there are Python docstring errors
         $CONDA/bin/pydocstyle .
     
   build-windows:
@@ -42,11 +39,8 @@ jobs:
         C:\Miniconda\condabin\conda.bat init powershell
     - name: Lint with pycodestyle and pydocstyle
       run: |
-        # Activate the base environment
         C:\Miniconda\condabin\conda.bat activate base
-        # stop the build if there are Python syntax errors
         pycodestyle .
-        # stop the build if there are Python docstring errors
         pydocstyle .
 
   build-macos:
@@ -60,12 +54,9 @@ jobs:
         python-version: 3.8
     - name: Install dependencies
       run: |
-        # $CONDA is an environment variable pointing to the root of the miniconda directory
         $CONDA/bin/conda env update --file Environment/DAT540EANN.yml --name base
     - name: Lint with pycodestyle and pydocstyle
       run: |
-        # stop the build if there are Python syntax errors
         $CONDA/bin/pycodestyle .
-         # stop the build if there are Python docstring errors
         $CONDA/bin/pydocstyle .
     
