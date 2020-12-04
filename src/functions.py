@@ -13,6 +13,34 @@ Functions:
     nnPerformance - Visualize the performance from each generation.
     mutation_rate - Dynamic mutation rate function.
     save_frames_as_gif - Function for storing gif of trained agent.
+
+Functions by Author:
+    Bjørn Christian Weinbach:
+        create_new_network
+        initialise_population
+        partial_fit
+        mutation_rate
+        save_frames_as_gif
+
+    Marius Sørensen:
+        show_simulation
+        create_new_network
+
+    Ove Jørgensen:
+        mutationFunc_W_B
+        average_weight_and_bias
+
+    Håvard Godal:
+        de_crossover
+        breedCrossover
+
+    Johanna Kinstad:
+        mutationFunc_W_B
+
+    Vegard Rongve:
+        mutationFunc_W_B
+        nnPerformance
+        crossoverSinglePoint
 """
 
 from sklearn.neural_network import MLPClassifier
@@ -50,6 +78,8 @@ def create_new_network(env):
 
 def initialise_population(size, env):
     """[Initialise size number of agents].
+
+    Author: Bjørn Christian Weinbach
 
     Args:
         size ([Int]): [Number of agents in population]
@@ -470,6 +500,8 @@ def mutation_rate(score, goal):
 
 def save_frames_as_gif(frames, path='./', filename='gym_animation.gif'):
     """Save environment render as gif.
+
+    Author: Bjørn Christian Weinbach
 
     Args:
         frames (List): [List of env.render(mode="rgb_array")]
