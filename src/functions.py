@@ -501,7 +501,10 @@ def mutation_rate(score, goal):
 def save_frames_as_gif(frames, path='./', filename='gym_animation.gif'):
     """Save environment render as gif.
 
-    Author: Bjørn Christian Weinbach
+    "Stolen" from github user botforge. Modified to make it compatible.
+    url: https://gist.github.com/botforge/64cbb71780e6208172bbf03cd9293553
+
+    Author: Github: botforge, Modified Bjørn Christian Weinbach
 
     Args:
         frames (List): [List of env.render(mode="rgb_array")]
@@ -521,4 +524,4 @@ def save_frames_as_gif(frames, path='./', filename='gym_animation.gif'):
     anim = animation.FuncAnimation(
         plt.gcf(), animate, frames=len(frames), interval=50)
 
-    anim.save(path + filename, writer='pillow', fps=15)
+    anim.save(path + filename, writer='pillow', fps=60)
