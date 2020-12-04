@@ -1,4 +1,7 @@
-name: Python Package using Conda
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python package
 
 on:
   push:
@@ -7,56 +10,26 @@ on:
     branches: [ main ]
 
 jobs:
-  build-linux:
+  build:
+
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8']
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.8
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        $CONDA/bin/conda env update --file Environment/DAT540EANN.yml --name base
-    - name: Lint with pycodestyle and pydocstyle
+        python -m pip install --upgrade pip
+        python -m pip install pycodestyle pydocstyle
+    - name: Lint with pycodestyle
       run: |
-        $CONDA/bin/pycodestyle .
-        $CONDA/bin/pydocstyle .
-    
-  build-windows:
-    runs-on: windows-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-    - name: Install dependencies
+        pycodestyle . 
+    - name: Lint with pydocstyle
       run: |
-        C:\Miniconda\condabin\conda.bat env update --file Environment/DAT540EANN.yml --name base
-        C:\Miniconda\condabin\conda.bat init powershell
-    - name: Lint with pycodestyle and pydocstyle
-      run: |
-        C:\Miniconda\condabin\conda.bat activate base
-        pycodestyle .
-        pydocstyle .
-
-  build-macos:
-    runs-on: macos-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-    - name: Install dependencies
-      run: |
-        $CONDA/bin/conda env update --file Environment/DAT540EANN.yml --name base
-    - name: Lint with pycodestyle and pydocstyle
-      run: |
-        $CONDA/bin/pycodestyle .
-        $CONDA/bin/pydocstyle .
-    
+        pydocstyle . 
