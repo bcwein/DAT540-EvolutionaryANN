@@ -79,7 +79,7 @@ def mutationFunc_W_B(agent, mutation_rate, method):
         if item == 0:
             node_item = agent.coefs_
         else:
-            node_item = copy.copy(agent.intercepts_)
+            node_item = agent.intercepts_
 
         for el in node_item:
             for swappedRow in el:
@@ -90,10 +90,7 @@ def mutationFunc_W_B(agent, mutation_rate, method):
                         random2, random1 = random1, random2
 
                     if(method == 'swap'):
-                        row1 = copy.copy(swappedRow)
-                        row2 = copy.copy(el[random1])
-                        swappedRow = row2
-                        el[random1] = row1
+                        swappedRow, el[random1] = el[random1], swappedRow
 
                     elif(method == 'scramble'):
                         random.shuffle(el[random1:random2])
@@ -104,17 +101,64 @@ def mutationFunc_W_B(agent, mutation_rate, method):
                     else:
                         if(type(swappedRow) == np.float64):
                             if method == 'gaussian':
-                                swappedRow +=  np.random.normal(0, 2)
+                                swappedRow += np.random.normal(0, 2)
                             elif method == 'uniform':
                                 swappedRow = random.random()
                         else:
                             for inner in swappedRow:
                                 if method == 'gaussian':
                                     inner += np.random.normal(0, 2)
-                                elif method =='uniform':
+                                elif method == 'uniform':
                                     inner = random.random()
-                    
+
     return agent
+
+
+def de_crossover(nn1, nn2):
+    """Differential crossover.
+
+    Author: Håvard Godal
+
+    Args:
+        nn1 (MLPClassifier): [Neural Network]
+        nn2 (MLPClassifier): [Neural Network]
+
+    Returns:
+        [type]: [description]
+    """
+    # differential evolution
+    newcoefs = []
+    for i in range(2):
+        shape = nn1.coefs_[i].shape
+        coef1Flat = np.ravel(nn1.coefs_[i])
+        coef2Flat = np.ravel(nn2.coefs_[i])
+
+        newcoefs.append(
+            np.array(
+                coef1Flat + np.random.uniform(
+                    0,
+                    1,
+                    len(coef1Flat)
+                ) * (coef2Flat-coef1Flat)
+            ).reshape(shape)
+        )
+
+    newintercepts = []
+    for i in range(2):
+        shape = nn1.intercepts_[i].shape
+        intercepts1Flat = np.ravel(nn1.intercepts_[i])
+        intercepts2Flat = np.ravel(nn2.intercepts_[i])
+
+        newintercepts.append(
+            np.array(
+                intercepts1Flat + np.random.uniform(
+                    0,
+                    1,
+                    len(intercepts1Flat)
+                ) * (intercepts2Flat-intercepts1Flat)
+            ).reshape(shape)
+        )
+    return newcoefs, newintercepts
 
 
 def breedCrossover(nn1, nn2):
