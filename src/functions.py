@@ -428,8 +428,8 @@ def nnPerformance(generation, best_score, average_score, acceptanceCriteria):
 
     Returns:Plot
     """
-    plt.plot(range(1, generation+1), best_score, label="Max score")
-    plt.plot(range(1, generation+1), average_score, label="Average score")
+    plt.plot(range(generation), best_score, label="Max score")
+    plt.plot(range(generation), average_score, label="Average score")
     plt.title('Fitness through the generations')
     plt.axhline(y=acceptanceCriteria, color='r',
                 linestyle='--', label="Acceptance ratio")
