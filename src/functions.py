@@ -177,7 +177,7 @@ def de_crossover_classic(agent, randomAgents):
 
 
 def de_crossover(nn1, nn2):
-    """Differential crossover.
+    """Create new weights and biases through a modified differential evolution crossover.
 
     Author: Håvard Godal
 
@@ -189,8 +189,8 @@ def de_crossover(nn1, nn2):
         [newcoeffs]: [Weights of new network]
         [newintercepts]: [Biases of new network]
     """
-    # differential evolution
     newcoefs = []
+    newintercepts = []
     for i in range(2):
         shape = nn1.coefs_[i].shape
         coef1Flat = np.ravel(nn1.coefs_[i])
@@ -206,8 +206,6 @@ def de_crossover(nn1, nn2):
             ).reshape(shape)
         )
 
-    newintercepts = []
-    for i in range(2):
         shape = nn1.intercepts_[i].shape
         intercepts1Flat = np.ravel(nn1.intercepts_[i])
         intercepts2Flat = np.ravel(nn2.intercepts_[i])
@@ -258,8 +256,6 @@ def breedCrossover(nn1, nn2):
 
         indexes = sorted([int(random.random() * len(paramFlat1)),
                           int(random.random() * len(paramFlat1))])
-
-        # Should consider combining the code chunks beneath into one
 
         newFlatParam = copy.copy(paramFlat2)
         newFlatParam[indexes[0]:indexes[1]] = paramFlat1[indexes[0]:indexes[1]]
