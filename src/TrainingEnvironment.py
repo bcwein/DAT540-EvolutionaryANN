@@ -37,7 +37,7 @@ env._max_episode_steps = 500
 acceptance_rate = 0.95
 population_size = 50
 generations = 15
-mutation = "swap"
+mutation_type = "swap"
 
 current_best_score = 0
 
@@ -59,9 +59,6 @@ for i in range(generations):
         # Store fitness.
         fit[n] = score
         scoreList[(population_size*i+n) % 100] = score
-        
-        listOfAverageScores.append(score)
-        listOfBestScores.append(current_best_score)
 
     best_agents_indexes = np.argsort(-fit)[:2]
 
@@ -73,15 +70,10 @@ for i in range(generations):
         np.set_printoptions(suppress=True)
         # Render best agent.
         # functions.simulate_agent(population[best_agents_indexes[0]], env, True)
-
-
         break
 
     parent1 = copy.copy(population[best_agents_indexes[0]])
     parent2 = copy.copy(population[best_agents_indexes[1]])
-
-    avgAgent = functions.average_weight_and_bias(population, env)
-    avgAgents.append(avgAgent)
 
     current_best_index = np.argmax(fit)
     current_best_score = fit[current_best_index]
@@ -104,14 +96,17 @@ for i in range(generations):
     for j in improvable_network_indices:
         population[j] = functions.mutationFunc_W_B(
             population[j],
-            1,
-            mutation
+            0.1,
+            mutation_type
         )
 
     print(" " * (population_size + 2), end="\r")
     print(
         f'Gen {i+1}: Average: {np.average(fit)} | Best: {current_best_score}'
     )
+
+    avgAgent = functions.average_weight_and_bias(population, env)
+    avgAgents.append(avgAgent)
 
     listOfAverageScores.append(np.average(fit))
     listOfBestScores.append(current_best_score)
