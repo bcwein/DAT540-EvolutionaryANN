@@ -308,46 +308,10 @@ def breedCrossover(nn1, nn2):
     return [child1, child2]
 
 
-def show_simulation(network, env, savetofile=False, filename=None):
-    """Display a simulation of a single given network in a given environment.
+def simulate_agent(agent, env, render=False, savetofile=False, filename=None):
+    """Simulate an agent in an environment and return its fitness score.
 
-    Author: Marius Sørensen
-
-    Args:
-        network (MLPClassifier): The network to use for simulation
-        env (TimeLimit): An OpenAI gym environment in which to
-        run the simulation
-        savetofile (boolean): Save simulation as gif
-        filename (string): Filename to save simulation as
-    """
-    observation = env.reset()
-    score = 0
-    actions = np.empty(5)
-    terminate = False
-    frames = []
-    while not(terminate):
-        j = 0
-        action = int(network.predict(
-            observation.reshape(1, -1).reshape(1, -1)))
-        if j > 5 and sum(actions) % 5 == 0:
-            action = env.action_space.sample()
-        observation, reward, terminate, _ = env.step(action)
-        score += reward
-        j += 1
-        actions[j % 5] = action
-        if savetofile:
-            frames.append(env.render(mode="rgb_array"))
-        else:
-            env.render()
-    if savetofile:
-        save_frames_as_gif(frames, path='./gifs/', filename=filename)
-    return score
-
-
-def train_agent(agent, env):
-    """Train an agent in an environment and return its fitness score.
-
-    Author: [Håvard Godal, Marius Sørensen]
+    Author: [Håvard Godal, Marius Sørensen, Bjørn Christian Weinbach]
 
     Args:
         agent (MLPClassifier): [Neural Network]
@@ -359,19 +323,23 @@ def train_agent(agent, env):
     observation = env.reset()
     score = 0
     actions = np.empty(5)
-    terminate = False
-    j = 0
+    done = False
+
+    frames = []
+
     # Agent-Environment Interaction
-    while not(terminate):
+    while not done:
         action = int(agent.predict(
-            observation.reshape(1, -1).reshape(1, -1)))
-        if j > 5 and sum(actions) % 5 == 0:
-            action = env.action_space.sample()
+            observation.reshape(1, -1)))
         observation, reward, done, _ = env.step(action)
         score += reward
-        j += 1
-        actions[j % 5] = action
-        terminate = done
+
+        if savetofile:
+            frames.append(env.render(mode="rgb_array"))
+        if render:
+            env.render()
+    if savetofile:
+        save_frames_as_gif(frames, path='./gifs/', filename=filename)
 
     return score
 
