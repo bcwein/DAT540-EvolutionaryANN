@@ -118,6 +118,64 @@ def mutationFunc_W_B(agent, mutation_rate, method):
     return agent
 
 
+def de_crossover_classic(agent, randomAgents):
+    """Create new weights and biases through a differential evolution crossover.
+
+    Author: Håvard Godal
+
+    Args:
+        agent (MLPClassifier): [Neural Network]
+        randomAgents (List) : [List of MLPClassifiers]
+
+    Returns:
+        [newcoeffs]: [Weights of new network]
+        [newintercepts]: [Biases of new network]
+    """
+    # Crossover probability
+    CR = 0.9
+    # Differential weight
+    F = 0.8
+
+    newcoefs = []
+    newintercepts = []
+    for i in range(2):
+        shape = agent.coefs_[i].shape
+        R = np.random.random_integers(0, len(agent.coefs_[i]))
+
+        agentCoefFlat = np.ravel(agent.coefs_[i])
+        coef1Flat = np.ravel(randomAgents[0].coefs_[i])
+        coef2Flat = np.ravel(randomAgents[1].coefs_[i])
+        coef3Flat = np.ravel(randomAgents[2].coefs_[i])
+
+        for j in range(len(agentCoefFlat)):
+            r = np.random.uniform()
+
+            if r < CR or j == R:
+                agentCoefFlat[j] = coef1Flat[j] + \
+                    F * (coef2Flat[j] - coef3Flat[j])
+
+        newcoefs.append(agentCoefFlat.reshape(shape))
+
+        shape = agent.intercepts_[i].shape
+        R = np.random.random_integers(0, len(agent.intercepts_[i]))
+
+        agentInterceptsFlat = np.ravel(agent.intercepts_[i])
+        inter1Flat = np.ravel(randomAgents[0].intercepts_[i])
+        inter2Flat = np.ravel(randomAgents[1].intercepts_[i])
+        inter3Flat = np.ravel(randomAgents[2].intercepts_[i])
+
+        for j in range(len(agentInterceptsFlat)):
+            r = np.random.uniform()
+
+            if r < CR or j == R:
+                agentInterceptsFlat[j] = inter1Flat[j] + \
+                    F*(inter2Flat[j] - inter3Flat[j])
+
+        newintercepts.append(agentInterceptsFlat.reshape(shape))
+
+    return newcoefs, newintercepts
+
+
 def de_crossover(nn1, nn2):
     """Differential crossover.
 
@@ -211,8 +269,6 @@ def breedCrossover(nn1, nn2):
         newParam.insert(1 - layer, param2[1 - layer])
 
         child1.append(newParam)
-
-        #######################################################################
 
         newFlatParam = copy.copy(paramFlat1)
         newFlatParam[indexes[0]:indexes[1]] = paramFlat2[indexes[0]:indexes[1]]
