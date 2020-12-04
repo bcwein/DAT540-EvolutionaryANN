@@ -1,4 +1,20 @@
-"""Python script for training generations of neural networks."""
+"""
+Python script for training generations of neural networks.
+
+This script has been worked on by all the authors
+and ownership is among all the authors.
+
+Otherwise, using vscode's Gitlens extension provides a way to see
+who commited each line.
+
+Authors:
+    Bjørn Christian Weinbach:
+    Marius Sørensen:
+    Ove Jørgensen:
+    Håvard Godal:
+    Johanna Kinstad:
+    Vegard Rongve:
+"""
 
 import gym
 import numpy as np
