@@ -65,21 +65,25 @@ for i in range(generations):
     parent1 = copy.deepcopy(population[best_agents_indexes[0]])
     parent2 = copy.deepcopy(population[best_agents_indexes[1]])
 
-    # Termination when acceptance rate achieved.
-    if np.mean(scoreList) >= env._max_episode_steps*acceptance_rate:
-        print(" " * (population_size + 2), end="\r")
-        print(f"\nSuccess in generation {i+1}!")
-        print(f"Current average score: {np.mean(scoreList)}")
-        np.set_printoptions(suppress=True)
-        # Render best agent.
-        functions.simulate_agent(population[best_agents_indexes[0]], env, True)
-        break
-
     # Store current maximum
     current_best_score = max(fit)
     if(current_best_score >= max_score):
         max_score = current_best_score
         best_network = copy.deepcopy(parent1)
+
+    # Append generation performance to lists
+    listOfAverageScores.append(np.average(fit))
+    listOfBestScores.append(current_best_score)
+
+    # Termination when acceptance rate achieved.
+    if np.mean(scoreList) >= env._max_episode_steps*acceptance_rate:
+        print(" " * (population_size + 2), end="\r")
+        print(f"\nSuccess in generation {i}!")
+        print(f"Current average score: {np.mean(scoreList)}")
+        np.set_printoptions(suppress=True)
+        # Render best agent.
+        functions.simulate_agent(population[best_agents_indexes[0]], env, True)
+        break
 
     # Breed new agents
     for j in range(population_size):
@@ -107,10 +111,6 @@ for i in range(generations):
     # Create the average agent of the generation
     avgAgent = functions.average_weight_and_bias(population, env)
     avgAgents.append(avgAgent)
-
-    # Append generation performance to lists
-    listOfAverageScores.append(np.average(fit))
-    listOfBestScores.append(current_best_score)
 
 # Plot best and average scores for each generation
 functions.nnPerformance(len(listOfBestScores),
