@@ -60,7 +60,7 @@ for i in range(generations):
         fit[n] = score
         scoreList[(population_size*i+n) % 100] = score
 
-     # Create parents for the next generation
+    # Create parents for the next generation
     best_agents_indexes = np.argsort(-fit)[:2]
     parent1 = copy.deepcopy(population[best_agents_indexes[0]])
     parent2 = copy.deepcopy(population[best_agents_indexes[1]])
