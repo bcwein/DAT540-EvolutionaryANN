@@ -138,7 +138,7 @@ def simulate_agent(agent, env, render=False, savetofile=False, filename=None):
 
 
 def de_crossover(nn1, nn2):
-    """Create new weights and biases through a modified differential evolution crossover.
+    """Create new weights and biases through a modified de-crossover.
 
     Author: Håvard Godal
 
@@ -402,7 +402,8 @@ def breedCrossover(nn1, nn2):
                           int(random.random() * len(paramFlat1))])
 
         newFlatParam = copy.copy(paramFlat2)
-        newFlatParam[indexes[0]:indexes[1]] = paramFlat1[indexes[0]:indexes[1]]
+        newFlatParam[indexes[0]:indexes[1]] = \
+            paramFlat1[indexes[0]:indexes[1]]
 
         newParam = []
         newParam.insert(layer, np.array(newFlatParam).reshape(shape))
@@ -411,7 +412,8 @@ def breedCrossover(nn1, nn2):
         child1.append(newParam)
 
         newFlatParam = copy.copy(paramFlat1)
-        newFlatParam[indexes[0]:indexes[1]] = paramFlat2[indexes[0]:indexes[1]]
+        newFlatParam[indexes[0]:indexes[1]] = \
+            paramFlat2[indexes[0]:indexes[1]]
 
         newParam = []
         newParam.insert(layer, np.array(newFlatParam).reshape(shape))
@@ -423,7 +425,7 @@ def breedCrossover(nn1, nn2):
 
 
 def de_crossover_classic(agent, randomAgents):
-    """Create new weights and biases through a differential evolution crossover.
+    """Create new weights and biases through a de-crossover.
 
     Author: Håvard Godal
 

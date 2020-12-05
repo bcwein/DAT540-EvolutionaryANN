@@ -82,7 +82,10 @@ for i in range(generations):
         print(f"Current average score: {np.mean(scoreList)}")
         np.set_printoptions(suppress=True)
         # Render best agent.
-        functions.simulate_agent(population[best_agents_indexes[0]], env, True)
+        functions.simulate_agent(
+            population[best_agents_indexes[0]],
+            env,
+            True)
         break
 
     # Breed new agents
