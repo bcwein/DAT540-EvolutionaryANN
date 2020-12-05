@@ -29,7 +29,6 @@ Functions by Author:
 
     Marius Sørensen:
         create_new_network
-        show_simulation
         simulate_agent
 
     Ove Jørgensen:
