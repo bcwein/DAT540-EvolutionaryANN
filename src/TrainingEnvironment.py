@@ -24,6 +24,7 @@ import copy
 # Support Metrics
 avgAgents = []
 global_best_score = 0
+current_best_score = 0
 scoreList = np.zeros(100)
 listOfAverageScores = []
 listOfBestScores = []
@@ -39,8 +40,6 @@ population_size = 50
 generations = 15
 mutation_type = "swap"
 mutation_rate = 0.1
-
-current_best_score = 0
 
 # Population
 population = functions.initialise_population(population_size, env)
@@ -61,7 +60,10 @@ for i in range(generations):
         fit[n] = score
         scoreList[(population_size*i+n) % 100] = score
 
+     # Create parents for the next generation
     best_agents_indexes = np.argsort(-fit)[:2]
+    parent1 = copy.deepcopy(population[best_agents_indexes[0]])
+    parent2 = copy.deepcopy(population[best_agents_indexes[1]])
 
     # Termination when acceptance rate achieved.
     if np.mean(scoreList) >= env._max_episode_steps*acceptance_rate:
@@ -70,16 +72,11 @@ for i in range(generations):
         print(f"Current average score: {np.mean(scoreList)}")
         np.set_printoptions(suppress=True)
         # Render best agent.
-        # functions.simulate_agent(population[best_agents_indexes[0]], env, True)
+        functions.simulate_agent(population[best_agents_indexes[0]], env, True)
         break
 
-    parent1 = copy.deepcopy(population[best_agents_indexes[0]])
-    parent2 = copy.deepcopy(population[best_agents_indexes[1]])
-
-    current_best_index = np.argmax(fit)
-    current_best_score = fit[current_best_index]
-
-    # Store current global minimum
+    # Store current maximum
+    current_best_score = max(fit)
     if(current_best_score >= max_score):
         max_score = current_best_score
         best_network = copy.deepcopy(parent1)
@@ -101,17 +98,21 @@ for i in range(generations):
             mutation_type
         )
 
+    # Print information of the finished generation
     print(" " * (population_size + 2), end="\r")
     print(
         f'Gen {i+1}: Average: {np.average(fit)} | Best: {current_best_score}'
     )
 
+    # Create the average agent of the generation
     avgAgent = functions.average_weight_and_bias(population, env)
     avgAgents.append(avgAgent)
 
+    # Append generation performance to lists
     listOfAverageScores.append(np.average(fit))
     listOfBestScores.append(current_best_score)
 
+# Plot best and average scores for each generation
 functions.nnPerformance(len(listOfBestScores),
                         listOfBestScores,
                         listOfAverageScores,
