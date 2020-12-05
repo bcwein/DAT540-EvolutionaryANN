@@ -16,7 +16,7 @@ Functions:
     de_crossover_classic - Breeds a child from a classic de algorithm.
     crossoverSinglePoint - Breeds two children using one point crossover.
     mutation_rate - Dynamic mutation rate function.
-    
+
 
 Functions by Author:
     Bjørn Christian Weinbach:
