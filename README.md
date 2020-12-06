@@ -18,26 +18,32 @@ For a deeper explanation of managing environments. see the documentation [here](
 
 Open anaconda command line and type 
 
-> conda env create -f DAT540EANN.yml
+> `conda env create -f DAT540EANN.yml`
 
 Anaconda will then set up a environment with the packages specifiedin the .yml file
 
 Finally, activate the environment
 
-> conda activate DAT540EANN
+> `conda activate DAT540EANN`
 
 ### Updating environment
 
 If you need to install another package, update the environment.yml file manually and use the command
 
-> conda env update --file DAT540EANN.yml  --prune
+> `conda env update --file DAT540EANN.yml  --prune`
 
 The --prune option causes conda to remove any dependencies that are no longer required from the environment.
 
 ##  Running the code
-To run the program, use `python TrainingEnvironment.py` in terminal.
-The program can also take one additional argument which defines the number of steps in each episode before termination.\
-Example: `python TrainingEnvironment.py 1000` 
+To run the program, use 
+> `python TrainingEnvironment.py`
+
+in terminal or right click the file in vscode.
+
+The program can also take one additional argument which defines the number of steps in each episode before termination.
+
+> `python TrainingEnvironment.py 1000`
+
 ![](gifs/launch.gif)
 
 ## Results
