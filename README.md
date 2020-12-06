@@ -36,7 +36,7 @@ The --prune option causes conda to remove any dependencies that are no longer re
 
 ##  Running the code
 To run the program, use `python TrainingEnvironment.py` in terminal.
-The program can also take one additional argument which defines the number of steps in each episode before termination.
+The program can also take one additional argument which defines the number of steps in each episode before termination.\
 Example: `python TrainingEnvironment.py 1000` 
 ![](gifs/launch.gif)
 
