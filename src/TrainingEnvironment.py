@@ -20,6 +20,7 @@ import gym
 import numpy as np
 import functions
 import copy
+import sys
 
 # Support Metrics
 avgAgents = []
@@ -34,12 +35,20 @@ goalReached = False
 env = gym.make('CartPole-v1')
 
 # Hyperparameters
-env._max_episode_steps = 500
 acceptance_rate = 0.95
 population_size = 50
 generations = 15
 mutation_type = "swap"
 mutation_rate = 0.1
+
+# Allows the user to specify the max episode step
+# when calling the program
+try:
+    env._max_episode_steps = int(sys.argv[1])
+except (ValueError, IndexError):
+    env._max_episode_steps = 500
+
+print(f"Training agents with max steps = {env._max_episode_steps}:\n")
 
 # Population
 population = functions.initialise_population(population_size, env)

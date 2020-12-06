@@ -380,7 +380,6 @@ def breedCrossover(nn1, nn2):
     """
     # Choosing either input -> hidden-layer or hidden-layer -> output
     layer = random.randint(0, 1)
-    # layer = 1
 
     child1 = []
     child2 = []
