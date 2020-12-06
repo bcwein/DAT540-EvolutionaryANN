@@ -35,7 +35,9 @@ If you need to install another package, update the environment.yml file manually
 The --prune option causes conda to remove any dependencies that are no longer required from the environment.
 
 ##  Running the code
-To run the code. Run TrainingEnvironment.py in terminal.
+To run the program, use `python TrainingEnvironment.py` in terminal.
+The program can also take one additional argument which defines the number of steps in each episode before termination.
+Example: `python TrainingEnvironment.py 1000` 
 ![](gifs/launch.gif)
 
 ## Results
