@@ -517,6 +517,8 @@ def crossoverSinglePoint(parent1, parent2):
             flatParam1 = np.ravel(param1)
             flatParam2 = np.ravel(param2)
 
+            randIndex = int(random.random()*flatParam1.size)
+
             ch1 = np.concatenate(
                 (flatParam1[:randIndex], flatParam2[randIndex:]))
             ch2 = np.concatenate(
@@ -529,7 +531,7 @@ def crossoverSinglePoint(parent1, parent2):
             child1.append(ch1Reshape)
             child2.append(ch2Reshape)
 
-    return [child1[:2], child1[2:]], [child2[:2], child2[2:]], 1
+    return [child1[:2], child1[2:]], [child2[:2], child2[2:]]
 
 
 def mutationFunc(agent, mutation_rate):
