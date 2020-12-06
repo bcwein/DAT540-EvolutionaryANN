@@ -116,7 +116,6 @@ def simulate_agent(agent, env, render=False, savetofile=False, filename=None):
     """
     observation = env.reset()
     score = 0
-    actions = np.empty(5)
     done = False
     frames = []
 

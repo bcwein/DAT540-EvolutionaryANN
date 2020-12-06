@@ -39,7 +39,7 @@ acceptance_rate = 0.95
 population_size = 50
 generations = 15
 mutation_type = "swap"
-mutation_rate = 0.1
+mutation_rate = 0.05
 
 # Allows the user to specify the max episode step
 # when calling the program
