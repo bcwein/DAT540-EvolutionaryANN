@@ -7,6 +7,7 @@ Functions:
     simulate_agent - Simulates the chosen agent in the environment.
     de_crossover - Differential crossover.
     mutationFunc_W_B -  Mutate both weights and biases for an agent.
+    mutation_rate - Dynamic mutation rate function.
     average_weight_and_bias - Calculate the average weight and bias.
     nnPerformance - Visualize the performance from each generation.
     save_frames_as_gif - Storing gif of trained agent.
@@ -15,7 +16,6 @@ Functions:
     breedCrossover - Breeds a child using two point crossover.
     de_crossover_classic - Breeds a child from a classic de algorithm.
     crossoverSinglePoint - Breeds two children using one point crossover.
-    mutation_rate - Dynamic mutation rate function.
 
 
 Functions by Author:
@@ -23,9 +23,9 @@ Functions by Author:
         create_new_network
         initialise_population
         simulate_agent
+        mutation_rate
         save_frames_as_gif
         partial_fit
-        mutation_rate
 
     Marius Sørensen:
         create_new_network
@@ -234,6 +234,27 @@ def mutationFunc_W_B(agent, mutation_rate, method):
                                     inner = random.random()
 
     return agent
+
+
+def mutation_rate(score, goal):
+    """Dynamic mutation rate.
+
+    Author: Bjørn Christian Weinbach
+
+    Algorithm:
+        High mutation rate in beginning -> explores space
+        When good agents are found:
+            Low mutation rate so new agents are similar to
+            previous ones (given that they have a high score)
+
+    Args:
+        score (float): [score of best agent]
+        goal (float): [Linear function decreasing as score -> goal]
+
+    Return:
+        (float): [Mutation rate]
+    """
+    return(1 - (score/goal))
 
 
 def average_weight_and_bias(population, env):
@@ -565,24 +586,3 @@ def mutationFunc(agent, mutation_rate):
             agent.intercepts_ = node_item
 
     return agent
-
-
-def mutation_rate(score, goal):
-    """Dynamic mutation rate.
-
-    Author: Bjørn Christian Weinbach
-
-    Algorithm:
-        High mutation rate in beginning -> explores space
-        When good agents are found:
-            Low mutation rate so new agents are similar to
-            previous ones (given that they have a high score)
-
-    Args:
-        score (float): [score of best agent]
-        goal (float): [Linear function decreasing as score -> goal]
-
-    Return:
-        (float): [Mutation rate]
-    """
-    return(1 - (score/goal))
