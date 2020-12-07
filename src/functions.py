@@ -369,7 +369,6 @@ def crossoverSinglePoint(parent1, parent2):
     Returns:
         [children]: [List of two children containing coefs_ and intercepts_]
     """
-
     child1 = []
     child2 = []
 
@@ -395,7 +394,7 @@ def crossoverSinglePoint(parent1, parent2):
             flatParam1 = np.ravel(param1)
             flatParam2 = np.ravel(param2)
 
-            #randIndex = int(random.random()*flatParam1.size)
+            # randIndex = int(random.random()*flatParam1.size)
             randIndex = 1
 
             ch1 = np.concatenate(
@@ -412,13 +411,41 @@ def crossoverSinglePoint(parent1, parent2):
 
     return [child1[:2], child1[2:]], [child2[:2], child2[2:]], randIndex
 
-"""
-def sortPopulation(population, scores):
-    arr = np.array((population, scores)).T
-    sortArr = arr[np.argsort(arr[:, 1])].T
 
-    return sortArr[0]
-"""
+def mutationFunc(agent, mutation_rate):
+    """Mutate agents weights and biases.
+
+    Author: Vegard Rongve
+
+    Args:
+        agent ([MLPClassifier]): [Neural Network of agent]
+        mutation_rate ([float]): [Probability of mutation]
+
+    Returns:
+        [agent]: [Mutated agent]
+    """
+    for item in range(2):
+        if item == 0:
+            node_item = agent.coefs_
+        else:
+            node_item = agent.intercepts_
+
+        for i in range(len(node_item)):
+            for swappedRow in range(len(node_item[i])):
+                if (random.random() < mutation_rate):
+                    rowToSwapWith = int(random.random()*len(node_item[i]))
+                    row1 = copy.copy(node_item[i][swappedRow])
+                    row2 = copy.copy(node_item[i][rowToSwapWith])
+                    node_item[i][swappedRow] = row2
+                    node_item[i][rowToSwapWith] = row1
+
+        if item == 0:
+            agent.coefs_ = node_item
+        else:
+            agent.intercepts_ = node_item
+
+    return agent
+
 
 def mutation_rate(score, goal):
     """Dynamic mutation rate.

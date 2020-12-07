@@ -9,7 +9,7 @@ import wandb
 # methods =['swap', 'scramble', 'inverse', 'uniform', 'gaussian']
 # for method in methods:
 for run in range(50):
-    wandb.init(project="GymVisualizationSwap", reinit= True, group='swap2')
+    wandb.init(project="GymVisualizationSwap-rerun", reinit= True, group='swap')
     # Support Metrics
     avgAgents = []
     global_best_score = 0
