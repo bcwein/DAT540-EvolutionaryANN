@@ -110,7 +110,7 @@ for i in range(generations):
     for j in improvable_network_indices:
         population[j] = functions.mutationFunc_W_B(
             population[j],
-            mutation_rate,
+            functions.mutation_rate(np.mean(fit), env._max_episode_steps),
             mutation_type
         )
 
