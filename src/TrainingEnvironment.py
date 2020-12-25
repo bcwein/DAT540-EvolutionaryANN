@@ -35,7 +35,7 @@ goalReached = False
 env = gym.make('CartPole-v0')
 
 # Hyperparameters
-acceptance_rate = 0.95
+acceptance_rate = 0.975
 population_size = 50
 generations = 15
 mutation_type = "swap"
