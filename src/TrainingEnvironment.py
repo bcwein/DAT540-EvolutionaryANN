@@ -32,7 +32,7 @@ listOfBestScores = []
 goalReached = False
 
 # Environment
-env = gym.make('CartPole-v1')
+env = gym.make('CartPole-v0')
 
 # Hyperparameters
 acceptance_rate = 0.95
@@ -46,7 +46,7 @@ mutation_rate = 0.05
 try:
     env._max_episode_steps = int(sys.argv[1])
 except (ValueError, IndexError):
-    env._max_episode_steps = 500
+    env._max_episode_steps = 200
 
 print(f"Training agents with max steps = {env._max_episode_steps}:\n")
 
@@ -87,7 +87,13 @@ for i in range(generations):
     # Termination when acceptance rate achieved.
     if np.mean(scoreList) >= env._max_episode_steps*acceptance_rate:
         print(" " * (population_size + 2), end="\r")
-        print(f"\nSuccess in generation {i}!")
+        # Print information of the finished generation
+        print(" " * (population_size + 2), end="\r")
+        print(
+            f'Gen {i+1}: Average: {np.average(fit)} |' +
+            f' Best: {current_best_score}'
+        )
+        print(f"\nSuccess in generation {i+1}!")
         print(f"Current average score: {np.mean(scoreList)}")
         np.set_printoptions(suppress=True)
         # Render best agent.
